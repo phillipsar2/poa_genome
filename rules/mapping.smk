@@ -2,10 +2,10 @@
 rule bwa_map:
     input:
         ref = config.ref,
-        r1 = "data/raw/sequences/{sample}_1.fq.gz",
-        r2 = "data/raw/sequences/{sample}_2.fq.gz"
+        r1 = config.bwa_r1,
+        r2 = config.bwa_r2
     output:
-        temp("data/interm/mapped_bam/{sample}.ITS.mapped.bam")
+        temp("data/interm/mapped_bam/{sample}.ETS.mapped.bam")
     log:
         "logs/bwa_mem/{sample}.log"
     shell:
@@ -13,7 +13,7 @@ rule bwa_map:
         "samtools view -Sb > {output}) 2> {log}"
 
 
-# Align a single gene to the consensus sequences
+# Align a single gene to the chloroplast genome consensus sequences
 rule bwa_single:
     input: 
         gene = config.gene,
@@ -25,19 +25,15 @@ rule bwa_single:
         shell("samtools faidx {input.ref}")
         shell("bwa mem {input.ref} {input.gene} | samtools view -Sb > {output}")
 
-# Takes the input file and stores a sorted version in a different directory.
-#rule samtools_sort:
-#    input:
-#        config.sort_in
-#        "data/interm/mapped_bam/{sample}.mapped.bam",
-#    output:
-#        temp("data/sorted_bam/{sample}.sorted.bam"),
-#    params:
-#        tmp = "/scratch/aphillip/sort_bam/{sample}"
-#    run:
-#        shell("mkdir -p {params.tmp}")
-#        shell("samtools sort -T {params.tmp} {input} > {output}")
-#        shell("rm -rf {params.tmp}")
+# Align a single gene to the poa reference genome
+rule bwa_ref:
+    input:
+        gene = config.gene,
+        ref = "data/genome/{sample}.fasta"
+    output:
+        temp("data/interm/mapped_bam/{sample}.TLF.ref.mapped.bam")
+    run:
+        shell("bwa mem {input.ref} {input.gene} | samtools view -Sb > {output}")
 
 # Align induviduals to a single plastid gene using bwa mem
 # Not in use

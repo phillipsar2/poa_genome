@@ -3,9 +3,9 @@
 rule get_snps:
     input:
         ref = config.ref,
-        vcf = "data/vcf/{sample}.vcf"
+        vcf = "data/vcf/ETS/{sample}.vcf"
     output:
-        "data/raw/vcf_bpres/{sample}.raw.snps.vcf"
+        "data/raw/vcf_bpres/{sample}.raw.ETS.snps.vcf"
     run:
         shell("gatk SelectVariants \
         -R {input.ref} \
@@ -24,9 +24,9 @@ rule get_snps:
 rule hard_filter:
     input:
         ref = config.ref,
-        vcf = "data/raw/vcf_bpres/{sample}.raw.snps.vcf"
+        vcf = "data/raw/vcf_bpres/{sample}.raw.ETS.snps.vcf"
     output:
-        "data/processed/filtered_snps_bpres/{sample}.filtered.snps.vcf"
+        "data/processed/filtered_snps_bpres/{sample}.ETS.filtered.snps.vcf"
     run:
         shell("gatk VariantFiltration \
         -V {input.vcf} \

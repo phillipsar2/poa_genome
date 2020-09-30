@@ -1,24 +1,28 @@
 import config
 
 # Sample names
-SAMPLE = glob_wildcards("data/raw/sequences/{sample}_1.fq.gz").sample
+#SAMPLE = glob_wildcards("data/raw/sequences/{sample}_1.fq.gz").sample
 #print(SAMPLE)
+
+# Treating poa reference genome as the sample
+SAMPLE = ["poa-v1"]
+print(SAMPLE)
+
 # Set number of intervals for gatk to 200
 INTERVALS = ["{:04d}".format(x) for x in list(range(200))]
 
 rule all:
     input:
         # Aligning reads
-#        markdups = expand(config.mark_out, sample = SAMPLE),
+        markdups = expand(config.mark_out, sample = SAMPLE),
         # Assess quality of mapped reads
-        bamqc = expand("reports/bamqc/ITS/{sample}_stats/qualimapReport.html", sample = SAMPLE),
+#        bamqc = expand("reports/bamqc/ETS/{sample}_stats/qualimapReport.html", sample = SAMPLE),
         # SNP calling
-#        hap_caller = expand("data/gvcf/{sample}.g.vcf", sample = SAMPLE),
-#        hap_vcf = expand("data/vcf/{sample}.vcf", sample = SAMPLE)
-#        hard_filt = expand("data/processed/filtered_snps_bpres/{sample}.filtered.snps.vcf", sample = SAMPLE),
-#        diagnostics = expand("reports/filtering/gvcf_{sample}.table", sample = SAMPLE)
+#        hap_vcf = expand("data/vcf/ETS/{sample}.vcf", sample = SAMPLE),
+#        hard_filt = expand("data/processed/filtered_snps_bpres/{sample}.ETS.filtered.snps.vcf", sample = SAMPLE),
         # Build consensus seq
 #        alt_ref = expand("data/processed/pseudo_ref/{sample}.pseudo.fasta", sample = SAMPLE)
+#        ETS = expand("data/gene/ETS/{sample}.consensus.ETS.fasta",sample = SAMPLE)
         # Align gene to consensus seq
 #        bwa_single = expand("data/interm/mapped_bam/{sample}.rpoB-trn-C.mapped.bam", sample = SAMPLE)
 #        get_seq = expand("data/processed/gene/trnTtrnLtrnF/{sample}.trnTtrnLtrnF.fasta", sample = SAMPLE)
@@ -40,7 +44,7 @@ rule all:
 # Rules
 include: "rules/mapping.smk"
 include: "rules/process_bam.smk"
-#include: "rules/calling.smk"
-#include: "rules/consensus_seq.smk"
-#include: "rules/filtering.smk"
+include: "rules/calling.smk"
+include: "rules/consensus_seq.smk"
+include: "rules/filtering.smk"
 #include: "rules/multiseq_align.smk"

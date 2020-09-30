@@ -2,7 +2,7 @@
 rule samtools_sort:
     input:
 #        config.bwa_pull
-        "data/interm/mapped_bam/{sample}.ITS.mapped.bam"
+        "data/interm/mapped_bam/{sample}.TLF.ref.mapped.bam"
     output:
         temp(config.sort_out),
     params:
@@ -64,9 +64,9 @@ rule bamqc:
     input:
         config.mark_out
     output:
-        "reports/bamqc/ITS/{sample}_stats/qualimapReport.html"
+        "reports/bamqc/ETS/{sample}_stats/qualimapReport.html"
     params:
-        dir = "reports/bamqc/ITS/{sample}_stats"
+        dir = "reports/bamqc/ETS/{sample}_stats"
     run: 
         shell("qualimap bamqc \
         -bam {input} \

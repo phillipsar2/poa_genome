@@ -1,11 +1,11 @@
 rule haplotype_caller:
     input:
         ref = config.ref, 
-        bam = "data/interm/mark_dups/{sample}.dedup.bam"
+        bam = config.mark_out
     output:
-        outdir = "data/vcf/{sample}.vcf"
+        outdir = "data/vcf/ETS/{sample}.vcf"
     params:
-        regions = "data/genome/poa.contig.list"
+        regions = config.contig_list
     run:
         shell("gatk HaplotypeCaller \
         --input {input.bam} \

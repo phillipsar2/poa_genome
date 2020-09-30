@@ -35,10 +35,12 @@ rule bcf_to_iupac:
 rule pseudo_ref:
     input:
         ref = config.ref,
-        vcf = "data/processed/filtered_snps_bpres/{sample}.filtered.snps.vcf.gz"
+        vcf = "data/processed/filtered_snps_bpres/{sample}.ETS.filtered.snps.vcf"
     output:
-        "data/processed/pseudo_ref/{sample}.pseudo.fasta"
+#        "data/processed/pseudo_ref/{sample}.pseudo.fasta"
+        "data/gene/ETS/{sample}.consensus.ETS.fasta"
     run:
+#        shell("gatk IndexFeatureFile -I {input.vcf}")
         shell("gatk FastaAlternateReferenceMaker \
         -R {input.ref} \
         -O {output} \
