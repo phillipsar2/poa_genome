@@ -10,24 +10,3 @@ rule get_gene:
     rule:
         shell("~/toolsfordayz/bioawk/bioawk -c fastx ''{{ print $seq }}'' {input} | \
         awk ''{{print substr($1,17889,1116) }}'' >> {output}")
-
-
-# Aligning the gene sequences using MAFFT
-rule multi_aln:
-    input:
-        config.gene_fasta
-    output:
-        config.multi_aln
-    run:
-        shell("mafft \
-        --localpair \
-        --maxiterate 1000 \
-        {input} > {output}")
-
-# Align gene sequences using Clustal Omega
-rule clustal_aln:
-    input:
-        config.gene_fasta
-    output:
-    run:
-        shell("clustalo -i {input} 

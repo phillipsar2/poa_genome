@@ -1,12 +1,12 @@
 import config
 
 # Sample names
-#SAMPLE = glob_wildcards("data/raw/sequences/{sample}_1.fq.gz").sample
+SAMPLE = glob_wildcards("data/raw/sequences/{sample}_1.fq.gz").sample
 #print(SAMPLE)
 
 # Treating poa reference genome as the sample
-SAMPLE = ["poa-v1"]
-print(SAMPLE)
+#SAMPLE = ["poa-v1"]
+#print(SAMPLE)
 
 # Set number of intervals for gatk to 200
 INTERVALS = ["{:04d}".format(x) for x in list(range(200))]
@@ -14,9 +14,13 @@ INTERVALS = ["{:04d}".format(x) for x in list(range(200))]
 rule all:
     input:
         # Aligning reads
-        markdups = expand(config.mark_out, sample = SAMPLE),
+        markdups = expand(config.mark_dups, sample = SAMPLE),
         # Assess quality of mapped reads
-#        bamqc = expand("reports/bamqc/ETS/{sample}_stats/qualimapReport.html", sample = SAMPLE),
+#        bamqc = expand("reports/bamqc/{sample}_stats/qualimapReport.html", sample = SAMPLE),
+        # Call SNPS
+        haplo_caller = expand("data/vcf/{sample}.vcf", sample = SAMPLE),
+#        split_int = expand("data/processed/scattered_intervals/{interval}-scattered.interval_list", interval = INTERVALS),
+##### Rules for identifying genes and building consensus sequences ####
         # SNP calling
 #        hap_vcf = expand("data/vcf/ETS/{sample}.vcf", sample = SAMPLE),
 #        hard_filt = expand("data/processed/filtered_snps_bpres/{sample}.ETS.filtered.snps.vcf", sample = SAMPLE),
@@ -34,9 +38,9 @@ rule all:
 #        txt = expand("data/processed/iupac/{sample}.txt", sample = SAMPLE),
 #        head = expand("data/processed/filt_indels/{sample}.header", sample = SAMPLE)
 
-#        dp = expand("data/processed/filtered_snps_bpres/{count}.filtered.dp3_77.snps.vcf", count = INTERVALS),
-#        dp2 = expand("data/processed/filtered_snps_bpres/{count}.filtered.dp3_77.nocall.snps.vcf", count = INTERVALS),
-#        bgzip_vcf = expand("data/processed/filtered_snps_bpres/{count}.filtered.dp3_77.nocall.snps.vcf.gz", count = INTERVALS),
+#        dp = expand("data/processed/filtered_snps_bpres/{intervals}.filtered.dp3_77.snps.vcf", intervals = INTERVALS),
+#        dp2 = expand("data/processed/filtered_snps_bpres/{intervals}.filtered.dp3_77.nocall.snps.vcf", intervals = INTERVALS),
+#        bgzip_vcf = expand("data/processed/filtered_snps_bpres/{intervals}.filtered.dp3_77.nocall.snps.vcf.gz", intervals = INTERVALS),
 #        combine = "data/processed/filtered_snps_bpres/oryza_glum.vcf.gz",
 #        depth_diag = "reports/filtering_bpres/oryza_glum.table"
 #        wholegenome = "data/processed/filtered_snps_bpres/oglum_wholegenome.vcf.gz"
@@ -45,6 +49,6 @@ rule all:
 include: "rules/mapping.smk"
 include: "rules/process_bam.smk"
 include: "rules/calling.smk"
-include: "rules/consensus_seq.smk"
-include: "rules/filtering.smk"
+#include: "rules/consensus_seq.smk"
+#include: "rules/filtering.smk"
 #include: "rules/multiseq_align.smk"

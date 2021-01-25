@@ -1,8 +1,7 @@
 # Takes the input file and stores a sorted version in a different directory.
 rule samtools_sort:
     input:
-#        config.bwa_pull
-        "data/interm/mapped_bam/{sample}.TLF.ref.mapped.bam"
+        "data/interm/mapped_bam/{sample}.mapped.bam"
     output:
         temp(config.sort_out),
     params:
@@ -16,7 +15,7 @@ rule add_rg:
     input:
         config.sort_out
     output:
-        bam = temp(touch(config.mark_in))
+        bam = temp(touch(config.add_rg))
     params:
         tmp = "/scratch/aphillip/addrg/{sample}",
         sample = "{sample}"
@@ -36,11 +35,9 @@ rule add_rg:
 
 rule mark_dups:
     input:
-        config.mark_in
+        config.add_rg
     output:
-        bam = config.mark_out,
-#        bam = "data/interm/mark_dups/{sample}.dedup.bam",
-#        index = "data/interm/mark_dups/{sample}.dedup.bai",
+        bam = config.mark_dups,
         metrics = "qc/mark_dup/{sample}_metrics.txt"
     params:
         tmp = "/scratch/aphillip/mark_dups/{sample}"
@@ -62,11 +59,11 @@ rule mark_dups:
 # Quality metrics with qualimap
 rule bamqc:
     input:
-        config.mark_out
+        config.mark_dups
     output:
-        "reports/bamqc/ETS/{sample}_stats/qualimapReport.html"
+        "reports/bamqc/{sample}_stats/qualimapReport.html"
     params:
-        dir = "reports/bamqc/ETS/{sample}_stats"
+        dir = "reports/bamqc/{sample}_stats"
     run: 
         shell("qualimap bamqc \
         -bam {input} \
