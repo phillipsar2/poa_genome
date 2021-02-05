@@ -1,7 +1,7 @@
 {
     "__default__" :
     {
-      "p" : "med",
+      "p" : "med2",
       "mem" : "16G",
       "time" : "7-00:00",
       "name": "rando",
@@ -61,8 +61,8 @@
     },
     "haplotype_caller" :
     {
-      "p" : "med2",
-      "mem" : "16G",
+      "p" : "high2",
+      "mem" : "24G",
       "time" : "7-00:00",
       "name" : "haplotype_caller"
     },
@@ -96,21 +96,21 @@
     },
     "get_snps" :
     {
-      "p" : "med",
+      "p" : "med2",
       "mem" : "16G",
       "time" : "7-00:00",
       "name" : "get_snps"
     },
     "hard_filter" :
     {
-      "p" : "med",
+      "p" : "med2",
       "mem" : "16G",
       "time" : "7-00:00",
       "name" : "filter_snps"
     },
     "diagnostics" :
     {
-      "p" : "med",
+      "p" : "med2",
       "mem" : "8G",
       "time" : "7-00:00",
       "name" : "diagnostics"

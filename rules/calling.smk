@@ -1,9 +1,27 @@
+# calling SNPs for the population panel
+rule sam_mpileup:
+    input:
+        ref = config.ref,
+        bam = config.mark_dups
+    output:
+        # outputs a gvcf but bcftools treats like vcf (?)
+        "data/gvcf/{sample}.raw.bcf"
+    run:
+        shell("bcftools mpileup -D -Ou -f {input.ref} {input.bam} | \
+        # default only sites with max 250 reads considered at each positin, this is way above the max coverage
+        bcftools call -m -Ob -o {output}")
+
+
+
+
+# Calling SNPs for the consensus sequences
+
 rule haplotype_caller:
     input:
         ref = config.ref, 
         bam = config.mark_dups
     output:
-        outdir = "data/vcf/{sample}.vcf"
+        outdir = "data/vcf/{gene}.{sample}.vcf"
     params:
         regions = config.contig_list
     run:

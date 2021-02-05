@@ -2,7 +2,7 @@ import config
 
 # Sample names
 SAMPLE = glob_wildcards("data/raw/sequences/{sample}_1.fq.gz").sample
-#print(SAMPLE)
+print(SAMPLE)
 
 # Treating poa reference genome as the sample
 #SAMPLE = ["poa-v1"]
@@ -14,12 +14,13 @@ INTERVALS = ["{:04d}".format(x) for x in list(range(200))]
 rule all:
     input:
         # Aligning reads
-        markdups = expand(config.mark_dups, sample = SAMPLE),
+#        markdups = expand(config.mark_dups, sample = SAMPLE),
         # Assess quality of mapped reads
 #        bamqc = expand("reports/bamqc/{sample}_stats/qualimapReport.html", sample = SAMPLE),
         # Call SNPS
-        haplo_caller = expand("data/vcf/{sample}.vcf", sample = SAMPLE),
+#        haplo_caller = expand("data/vcf/{sample}.vcf", sample = SAMPLE),
 #        split_int = expand("data/processed/scattered_intervals/{interval}-scattered.interval_list", interval = INTERVALS),
+        joint_geno = expand("data/raw/vcf_bpres/{interval}.raw.vcf", interval = INTERVALS),
 ##### Rules for identifying genes and building consensus sequences ####
         # SNP calling
 #        hap_vcf = expand("data/vcf/ETS/{sample}.vcf", sample = SAMPLE),
