@@ -1,19 +1,26 @@
-# calling SNPs for the population panel
+######## bcftools SNP calling pipeline #############
+
+# calling SNPs for the population panel then calculating quality and depth statistics for filtering
 rule sam_mpileup:
     input:
         ref = config.ref,
-        bam = config.mark_dups
+        bamlist = "data/interm/mark_dups/bamlist.txt"
     output:
         # outputs a gvcf but bcftools treats like vcf (?)
-        "data/gvcf/{sample}.raw.bcf"
+        bcf = "data/bcf/all.poa.raw.bcf",
+        stats = "reports/filtering/all.poa.bcf.stats"
     run:
-        shell("bcftools mpileup -D -Ou -f {input.ref} {input.bam} | \
+        shell("module load bcftools")
         # default only sites with max 250 reads considered at each positin, this is way above the max coverage
-        bcftools call -m -Ob -o {output}")
+        # -v option asks to output variant sites only (this is sufficient for the analyses we want to run)
+        shell("bcftools mpileup -Ou -f {input.ref} -b {input.bamlist} | \
+        bcftools call -mv -Ob -o {output.bcf}")
+        shell("bcftools tabix -p bcf {output.bcf}")
+        shell("bcftools stats -F {input.ref} -s - {output.bcf} > {output.stats}")
+        shell("plot-vcfstats -p reports/filtering/plots/ {output.stats}")
 
 
-
-
+######### GATK SNP calling pipeline ##############
 # Calling SNPs for the consensus sequences
 
 rule haplotype_caller:

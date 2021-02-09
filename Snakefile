@@ -2,7 +2,7 @@ import config
 
 # Sample names
 SAMPLE = glob_wildcards("data/raw/sequences/{sample}_1.fq.gz").sample
-print(SAMPLE)
+#print(SAMPLE)
 
 # Treating poa reference genome as the sample
 #SAMPLE = ["poa-v1"]
@@ -11,6 +11,13 @@ print(SAMPLE)
 # Set number of intervals for gatk to 200
 INTERVALS = ["{:04d}".format(x) for x in list(range(200))]
 
+# Set chromosome IDs
+CHROM = ["Super-Scaffold_107"]
+#, "Super-Scaffold_475", "Super-Scaffold_13795", "Super-Scaffold_40012", "Super-Scaffold_1000001", "Super-Scaffold_1000002", "Super-Scaffold_1000003", "Super-Scaffold_1000004", "Super-Scaffold_1000005", "Super-Scaffold_1000006", "Super-Scaffold_1000007", "Super-Scaffold_1000008", "Super-Scaffold_1000009", "Super-Scaffold_1000011", "Super-Scaffold_1000012", "Super-Scaffold_1000013", "Super-Scaffold_1000014", "Super-Scaffold_1000015", "Super-Scaffold_1000016"]
+
+# Set population. Options: ["all", "boulder", "manitoba"]
+POPL = ["all"]
+
 rule all:
     input:
         # Aligning reads
@@ -18,9 +25,13 @@ rule all:
         # Assess quality of mapped reads
 #        bamqc = expand("reports/bamqc/{sample}_stats/qualimapReport.html", sample = SAMPLE),
         # Call SNPS
+         mpileup = "data/bcf/all.poa.raw.bcf"
 #        haplo_caller = expand("data/vcf/{sample}.vcf", sample = SAMPLE),
 #        split_int = expand("data/processed/scattered_intervals/{interval}-scattered.interval_list", interval = INTERVALS),
-        joint_geno = expand("data/raw/vcf_bpres/{interval}.raw.vcf", interval = INTERVALS),
+#        joint_geno = expand("data/raw/vcf_bpres/{interval}.raw.vcf", interval = INTERVALS),
+        # Analysis of pop panel with angsd
+#        angsd_saf = expand("data/angsd_pi/{popl}--{chrom}.saf.gz", popl = POPL, chrom = CHROM),
+#        sfs = expand("data/angsd_pi/{popl}--{chrom}.sfs", popl = POPL, chrom = CHROM),
 ##### Rules for identifying genes and building consensus sequences ####
         # SNP calling
 #        hap_vcf = expand("data/vcf/ETS/{sample}.vcf", sample = SAMPLE),
@@ -47,9 +58,10 @@ rule all:
 #        wholegenome = "data/processed/filtered_snps_bpres/oglum_wholegenome.vcf.gz"
 
 # Rules
-include: "rules/mapping.smk"
-include: "rules/process_bam.smk"
+#include: "rules/mapping.smk"
+#include: "rules/process_bam.smk"
 include: "rules/calling.smk"
 #include: "rules/consensus_seq.smk"
 #include: "rules/filtering.smk"
 #include: "rules/multiseq_align.smk"
+#include: "rules/pop_gen.smk"

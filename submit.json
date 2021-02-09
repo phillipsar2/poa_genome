@@ -87,6 +87,13 @@
       "time" : "7-00:00",
       "name" : "multi_aln"
     },
+    "sam_mpileup" :
+    {
+      "p" : "med2",
+      "mem" : "32G",
+      "time" : "7-00:00",
+      "name" : "sam_mpileup"
+    },
     "joint_genotyping" :
     {
       "p" : "med2",
@@ -143,5 +150,12 @@
       "p" : "med2",
       "time" : "7-00:00",
       "name" : "bwa_pull",
+    },
+    "angsd_saf" :
+    {
+      "mem": "64G",
+      "p" : "med2",
+      "time" : "7-00:00",
+      "name" : "angsd_saf",
     },
 }
