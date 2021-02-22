@@ -8,17 +8,30 @@ rule sam_mpileup:
     output:
         # outputs a gvcf but bcftools treats like vcf (?)
         bcf = "data/bcf/all.poa.raw.bcf",
-        stats = "reports/filtering/all.poa.bcf.stats"
     run:
         shell("module load bcftools")
         # default only sites with max 250 reads considered at each positin, this is way above the max coverage
         # -v option asks to output variant sites only (this is sufficient for the analyses we want to run)
-        shell("bcftools mpileup -Ou -f {input.ref} -b {input.bamlist} | \
+        shell("bcftools mpileup -Ou -f {input.ref} -b {input.bamlist} \
+        --annotate FORMAT/AD,FORMAT/DP | \
         bcftools call -mv -Ob -o {output.bcf}")
-        shell("bcftools tabix -p bcf {output.bcf}")
-        shell("bcftools stats -F {input.ref} -s - {output.bcf} > {output.stats}")
-        shell("plot-vcfstats -p reports/filtering/plots/ {output.stats}")
 
+rule process_bcf:
+    input: 
+        bcf = "data/bcf/all.poa.raw.bcf",
+        ref = config.ref
+    output:
+        gz = "data/vcf/mpileup/all.poa.raw.vcf.gz",
+        stats = "reports/mpileup/all.poa.raw.vcf.stats"
+    params:
+        vcf = "data/vcf/mpileup/all.poa.raw.vcf",
+    run:
+        shell("bcftools view {input.bcf} > {params.vcf}")
+        shell("bgzip {params.vcf}")
+        shell("gatk IndexFeatureFile -I {output.gz}")
+#        shell("bcftools tabix -p vcf {output.gz}")
+        shell("bcftools stats -F {input.ref} -s - {input.bcf} > {output.stats}")
+        shell("plot-vcfstats -p reports/filtering/plots/ {output.stats}")
 
 ######### GATK SNP calling pipeline ##############
 # Calling SNPs for the consensus sequences

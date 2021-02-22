@@ -24,11 +24,17 @@ rule all:
 #        markdups = expand(config.mark_dups, sample = SAMPLE),
         # Assess quality of mapped reads
 #        bamqc = expand("reports/bamqc/{sample}_stats/qualimapReport.html", sample = SAMPLE),
-        # Call SNPS
-         mpileup = "data/bcf/all.poa.raw.bcf"
+        # Call SNPs
+#         mpileup = "data/bcf/all.poa.raw.bcf",
+#         bcf2vcf = "data/vcf/mpileup/all.poa.raw.vcf",
+#         diag = "reports/filtering/all.poa.snps.vcf.table",       
 #        haplo_caller = expand("data/vcf/{sample}.vcf", sample = SAMPLE),
 #        split_int = expand("data/processed/scattered_intervals/{interval}-scattered.interval_list", interval = INTERVALS),
 #        joint_geno = expand("data/raw/vcf_bpres/{interval}.raw.vcf", interval = INTERVALS),
+        # Filter SNPs
+#         hard_filt = "data/processed/filtered_snps/all.poa.filtered.nocall.snps.vcf",
+#         diag_depth = "reports/filtering/all.poa.depth.filtered.nocall.table",
+         filter_depth = "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.snps.vcf",
         # Analysis of pop panel with angsd
 #        angsd_saf = expand("data/angsd_pi/{popl}--{chrom}.saf.gz", popl = POPL, chrom = CHROM),
 #        sfs = expand("data/angsd_pi/{popl}--{chrom}.sfs", popl = POPL, chrom = CHROM),
@@ -60,8 +66,8 @@ rule all:
 # Rules
 #include: "rules/mapping.smk"
 #include: "rules/process_bam.smk"
-include: "rules/calling.smk"
+#include: "rules/calling.smk"
 #include: "rules/consensus_seq.smk"
-#include: "rules/filtering.smk"
+include: "rules/filtering.smk"
 #include: "rules/multiseq_align.smk"
 #include: "rules/pop_gen.smk"
