@@ -34,10 +34,13 @@ rule all:
         # Filter SNPs
 #         hard_filt = "data/processed/filtered_snps/all.poa.filtered.nocall.snps.vcf",
 #         diag_depth = "reports/filtering/all.poa.depth.filtered.nocall.table",
-         filter_depth = "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.snps.vcf",
+#         filter_depth = "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.snps.vcf",
+#        dp_nocall = "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.max1.snps.vcf",
+#        diag_AB = "reports/filtering/all.poa.AB.table",
         # Analysis of pop panel with angsd
 #        angsd_saf = expand("data/angsd_pi/{popl}--{chrom}.saf.gz", popl = POPL, chrom = CHROM),
 #        sfs = expand("data/angsd_pi/{popl}--{chrom}.sfs", popl = POPL, chrom = CHROM),
+         pca = "data/angsd_pi/pca/Ppratensis.pcangsd.cov"
 ##### Rules for identifying genes and building consensus sequences ####
         # SNP calling
 #        hap_vcf = expand("data/vcf/ETS/{sample}.vcf", sample = SAMPLE),
@@ -68,6 +71,6 @@ rule all:
 #include: "rules/process_bam.smk"
 #include: "rules/calling.smk"
 #include: "rules/consensus_seq.smk"
-include: "rules/filtering.smk"
+#include: "rules/filtering.smk"
 #include: "rules/multiseq_align.smk"
-#include: "rules/pop_gen.smk"
+include: "rules/pop_gen.smk"

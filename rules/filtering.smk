@@ -33,7 +33,7 @@ rule diagnostics:
         -F AB -F MQM -F MQMR -F AF -GF AO \
         -O {output}")
 
-# apply hard filtering following GATK best practices
+# apply hard filtering following GATK best practices - remove low confidence sites
 # https://gatk.broadinstitute.org/hc/en-us/articles/360035531112?id=23216#2
 # https://gatk.broadinstitute.org/hc/en-us/articles/360037499012?id=3225
 
@@ -80,9 +80,36 @@ rule filter_depth:
         shell("gatk VariantFiltration \
         -R {input.ref} \
         -V {input.vcf} \
-        -G-filter \"DP < 2 || DP > 20 \" \
+        -G-filter \"DP < 2 || DP > 20\" \
         -G-filter-name \"DP_2-20\" \
-        --set-filtered-genotype-to-no-call true -O {output.dp}")
+        --set-filtered-genotype-to-no-call true \
+        -O {output.dp}")
+
+# filter snps for genotype missingness
+
+rule depth_nocall:
+    input:
+        "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.snps.vcf"
+    output:
+        "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.max0.snps.vcf"
+    run:
+        shell("gatk SelectVariants -V {input} --exclude-filtered true --max-nocall-fraction 0 -O {output}")
+
+# Extract GT and DP for calculating AB
+rule diag_ab:
+    input:
+        vcf = "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.max0.snps.vcf",
+        ref = config.ref
+    output:
+        "reports/filtering/all.poa.AB.table"
+    run:
+#        shell("tabix -p vcf {input.vcf}")
+        shell("gatk VariantsToTable \
+        -R {input.ref} \
+        -V {input.vcf} \
+        -F CHROM -F POS -GF GT -GF AD \
+        -O {output}")
+
 
 #### Filtering to building consensus sequences ####
 

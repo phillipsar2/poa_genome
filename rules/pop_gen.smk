@@ -89,3 +89,26 @@ rule pop_pi:
         -step {params.win} \
         -outnames {params.prefix_out}.thetasWindow.gz
         """
+
+# run PCA
+## ? maybe change -minInd ?
+rule angsd_pca:
+    input:
+        bams = "data/interm/mark_dups/bamlist.txt",
+        ref = config.ref
+    output:
+        pca = "data/angsd_pi/pca/Ppratensis.pcangsd.cov"
+    params:
+        prefix_geno = "data/angsd_pi/Ppratensis",
+        prefix_pca = "data/angsd_pi/pca/Ppratensis.pcangsd"
+    run:
+        shell("module load angsd")
+        shell("angsd -GL 1 \
+        -out {params.prefix_geno} \
+        -nThreads 10 \
+        -doGlf 2 -doMajorMinor 4 -SNP_pval 1e-6 -doMaf 2 \
+        -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 \
+        -minMapQ 30 -minQ 30 -minInd 4 -skipTriallelic 1 \
+        -bam {input.bams} \
+        -ref {input.ref}")
+        shell("python tools/pcangsd/pcangsd.py -beagle {params.prefix_geno}.beagle.gz -o {params.prefix_pca}")
