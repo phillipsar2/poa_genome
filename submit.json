@@ -17,12 +17,17 @@
     "bwa_ref" :
     {
       "mem": "32G",
-# typically 64
       "p" : "med2",
       "time" : "7-00:00",
       "name" : "bwa_ref",
     },
-
+   "map_pacbio" :
+    {
+      "mem": "64G",
+      "p" : "med2",
+      "time" : "7-00:00",
+      "name" : "map_pacbio",
+    },
     "samtools_sort" :
     {
       "p" : "med2",
@@ -142,6 +147,13 @@
       "mem" : "10G",
       "time" : "7-00:00",
       "name" : "combine_vcfs"
+    },
+    "calc_Ab" :
+    {
+      "p" : "med2",
+      "mem" : "32G",
+      "time" : "7-00:00",
+      "name" : "calc_AB"
     },
     "bwa_pull" :
     {

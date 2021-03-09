@@ -1,5 +1,17 @@
 # scripts provided by Silas
 
+# convert filtered vcf to beagle format
+rule vcf_to_beagle:
+    input:
+        vcf = config.final_vcf
+    output:
+        beagle = config.beagle
+    params:
+        chr = "{chrom}"
+    run:
+        shell("module load vcftools")
+        shell("vcftools --vcf {input.vcf} --BEAGLE-PL --stdout --chr {params.chr} > {output}")
+
 # generate angsd saf file (based on Silas's rule named pop_beagle)
 rule angsd_saf:
     input:
@@ -108,7 +120,7 @@ rule angsd_pca:
         -nThreads 10 \
         -doGlf 2 -doMajorMinor 4 -SNP_pval 1e-6 -doMaf 2 \
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 \
-        -minMapQ 30 -minQ 30 -minInd 4 -skipTriallelic 1 \
+        -minMapQ 30 -minQ 30 -minInd 7 -skipTriallelic 1 \
         -bam {input.bams} \
         -ref {input.ref}")
         shell("python tools/pcangsd/pcangsd.py -beagle {params.prefix_geno}.beagle.gz -o {params.prefix_pca}")

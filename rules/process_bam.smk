@@ -1,11 +1,13 @@
 # Takes the input file and stores a sorted version in a different directory.
 rule samtools_sort:
     input:
-        "data/interm/mapped_bam/{sample}.mapped.bam"
+#        "data/interm/mapped_bam/{sample}.mapped.bam"
+        config.sort_in
     output:
         temp(config.sort_out),
     params:
-        tmp = "/scratch/aphillip/sort_bam/{sample}"
+#        tmp = "/scratch/aphillip/sort_bam/{sample}"
+        tmp = "/scratch/aphillip/sort_bam/pacbio"    
     run:
         shell("mkdir -p {params.tmp}")
         shell("samtools sort -T {params.tmp} {input} > {output}")
@@ -38,6 +40,7 @@ rule mark_dups:
         config.add_rg
     output:
         bam = config.mark_dups,
+#        metrics = config.metrics
         metrics = "qc/mark_dup/{sample}_metrics.txt"
     params:
         tmp = "/scratch/aphillip/mark_dups/{sample}"

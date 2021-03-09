@@ -8,12 +8,12 @@ SAMPLE = glob_wildcards("data/raw/sequences/{sample}_1.fq.gz").sample
 #SAMPLE = ["poa-v1"]
 #print(SAMPLE)
 
+
 # Set number of intervals for gatk to 200
 INTERVALS = ["{:04d}".format(x) for x in list(range(200))]
 
 # Set chromosome IDs
-CHROM = ["Super-Scaffold_107"]
-#, "Super-Scaffold_475", "Super-Scaffold_13795", "Super-Scaffold_40012", "Super-Scaffold_1000001", "Super-Scaffold_1000002", "Super-Scaffold_1000003", "Super-Scaffold_1000004", "Super-Scaffold_1000005", "Super-Scaffold_1000006", "Super-Scaffold_1000007", "Super-Scaffold_1000008", "Super-Scaffold_1000009", "Super-Scaffold_1000011", "Super-Scaffold_1000012", "Super-Scaffold_1000013", "Super-Scaffold_1000014", "Super-Scaffold_1000015", "Super-Scaffold_1000016"]
+CHROM = ["Super-Scaffold_107", "Super-Scaffold_475", "Super-Scaffold_13795", "Super-Scaffold_40012", "Super-Scaffold_1000001", "Super-Scaffold_1000002", "Super-Scaffold_1000003", "Super-Scaffold_1000004", "Super-Scaffold_1000005", "Super-Scaffold_1000006", "Super-Scaffold_1000007", "Super-Scaffold_1000008", "Super-Scaffold_1000009", "Super-Scaffold_1000011", "Super-Scaffold_1000012", "Super-Scaffold_1000013", "Super-Scaffold_1000014", "Super-Scaffold_1000015", "Super-Scaffold_1000016"]
 
 # Set population. Options: ["all", "boulder", "manitoba"]
 POPL = ["all"]
@@ -35,12 +35,18 @@ rule all:
 #         hard_filt = "data/processed/filtered_snps/all.poa.filtered.nocall.snps.vcf",
 #         diag_depth = "reports/filtering/all.poa.depth.filtered.nocall.table",
 #         filter_depth = "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.snps.vcf",
-#        dp_nocall = "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.max1.snps.vcf",
-#        diag_AB = "reports/filtering/all.poa.AB.table",
+#        dp_nocall = "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.max0.snps.vcf",
+#        grab_Ppr = "data/processed/filtered_snps/poa.pratensis.filtered.nocall.2dp20.max0.snps.vcf",
+#        diag_AB = config.ab_table,
+#        calc_AB = "reports/filtering/all.poa.AB.estimate.txt",
         # Analysis of pop panel with angsd
+#        to_beagle = expand(config.beagle, chrom = CHROM),
 #        angsd_saf = expand("data/angsd_pi/{popl}--{chrom}.saf.gz", popl = POPL, chrom = CHROM),
 #        sfs = expand("data/angsd_pi/{popl}--{chrom}.sfs", popl = POPL, chrom = CHROM),
-         pca = "data/angsd_pi/pca/Ppratensis.pcangsd.cov"
+#        pca = "data/angsd_pi/pca/Ppratensis.pcangsd.cov"
+##### Rules for aligning pacbio reads
+        haplocaller = "data/vcf/pacbio.vcf",
+
 ##### Rules for identifying genes and building consensus sequences ####
         # SNP calling
 #        hap_vcf = expand("data/vcf/ETS/{sample}.vcf", sample = SAMPLE),
@@ -73,4 +79,5 @@ rule all:
 #include: "rules/consensus_seq.smk"
 #include: "rules/filtering.smk"
 #include: "rules/multiseq_align.smk"
-include: "rules/pop_gen.smk"
+#include: "rules/pop_gen.smk"
+include: "rules/ref_AB.smk"

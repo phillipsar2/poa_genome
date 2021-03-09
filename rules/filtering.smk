@@ -86,7 +86,7 @@ rule filter_depth:
         -O {output.dp}")
 
 # filter snps for genotype missingness
-
+# max no-call fraction is zero
 rule depth_nocall:
     input:
         "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.snps.vcf"
@@ -95,13 +95,26 @@ rule depth_nocall:
     run:
         shell("gatk SelectVariants -V {input} --exclude-filtered true --max-nocall-fraction 0 -O {output}")
 
+# pull out only the P. pratensis individuals. Max no-call for these individuals is also zero.
+rule grab_Ppratensis:
+    input:
+        "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.snps.vcf"
+    output:
+        "data/processed/filtered_snps/poa.pratensis.filtered.nocall.2dp20.max0.snps.vcf"
+    run:
+        shell("gatk SelectVariants -V {input} \
+        --exclude-sample-name AN18N065_USPD16097226-SN40-AK7135_HJNH7DSXX_L4 \
+        --exclude-filtered true --max-nocall-fraction 0 -O {output}")
+
 # Extract GT and DP for calculating AB
 rule diag_ab:
     input:
-        vcf = "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.max0.snps.vcf",
+#        vcf = "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.max0.snps.vcf",
+        vcf = config.final_vcf,
         ref = config.ref
     output:
-        "reports/filtering/all.poa.AB.table"
+        config.ab_table
+#        "reports/filtering/all.poa.AB.table"
     run:
 #        shell("tabix -p vcf {input.vcf}")
         shell("gatk VariantsToTable \
@@ -109,6 +122,16 @@ rule diag_ab:
         -V {input.vcf} \
         -F CHROM -F POS -GF GT -GF AD \
         -O {output}")
+
+# calculate allele balance (AB) at every site
+rule calc_AB:
+    input:
+        "reports/filtering/all.poa.AB.table"
+    output:
+        "reports/filtering/all.poa.AB.estimate.txt"
+    script:
+        "scripts/allelebalance_filter.R"
+
 
 
 #### Filtering to building consensus sequences ####

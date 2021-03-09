@@ -27,3 +27,8 @@ Consensus trnL-trnF sequnces for the pop panel Poa
 (1) Reads for each individual were mapped to DQ354006.1.fasta, bams were sorted, duplicatees were marked, and read groups were added$
 (2) SNPs were called with gatk HaplotypeCaller, SNPs were pulled out and hard filtered following GATK best practices.
 (3) The vcfs were then use to generate a pseduo sequence with gatk FastaAlternateReferenceMaker.
+
+
+# rule files
+./ref_AB.smk
+Mapping, calling, and then calculating AB across the reference genome.
