@@ -57,9 +57,11 @@ bamlist = "data/interm/mark_dups/boulder_bamlist.txt"
 saf = "data/angsd_pi/boulder/pratensis.boulder.{chrom}.saf.gz"
 prefix = "data/angsd_pi/boulder/pratensis.boulder.{chrom}"
 ind = 5
+sfs = "data/angsd_pi/boulder/pratensis.boulder.{chrom}.sfs"
 
 # Across populations
 #bamlist = "data/interm/mark_dups/crosspops_bamlist.txt"
 #saf = "data/angsd_pi/crosspops/pratensis.crosspops.{chrom}.saf.gz"
 #prefix = "data/angsd_pi/crosspops/pratensis.crosspops.{chrom}"
-ind = 3
+#ind = 3
+#sfs = "data/angsd_pi/crosspops/pratensis.crosspops.{chrom}.sfs"

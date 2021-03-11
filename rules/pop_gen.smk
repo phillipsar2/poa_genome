@@ -78,22 +78,25 @@ rule angsd_saf:
         -out {params.prefix}")
 
 
-## Generate SFS (site frequency spectrum) from saf file
+## Generate global estimate of SFS (site frequency spectrum) from saf file
+# do not need to specify region as each saf is a region
+# realSFS generates the maximum likelihood estimate of the SFS
+# -fold 1 specifies the folded spectrum as I don't have an ancestral state
+### when using a folded SFS, only thetaW, thetaD, and tajimasD will be meaningful in the output of realSFS
+# real SFS saf2theta calculates the thetas for each site
 rule pop_sfs:
     input:
         ref = config.ref,
-        bams = "data/interm/mark_dups/bamlist.txt",
-        saf = "data/angsd_pi/{popl}--{chrom}.saf.gz"
+#        bams = "data/interm/mark_dups/bamlist.txt",
+        saf = config.saf
     output:
-        sfs = "data/angsd_pi/{popl}--{chrom}.sfs"
+        sfs = config.sfs
     params:
-        prefix = "data/angsd_pi/{popl}--{chrom}",
+        prefix = config.prefix,
     shell:
         """
-        module load angsd
-        # generate sfs from saf, 10 threads, maximum likelihood estimate, unfolded
-        realSFS {params.prefix}.saf.idx  -P 10 > {params.prefix}.sfs
-        # calculate thetas for each site
+#        module load angsd
+        realSFS {params.prefix}.saf.idx  -P 10 -fold 1> {params.prefix}.sfs
         realSFS saf2theta {params.prefix}.saf.idx -sfs {params.prefix}.sfs -outname {params.prefix}
         """
 
