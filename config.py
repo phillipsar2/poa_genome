@@ -27,6 +27,7 @@ mark_dups = "data/interm/mark_dups/{sample}.dedup.bam"
 # Evaluating allele balance and depth - Ppratensis
 ab_table = "reports/filtering/pPratensis.AB.table"
 
+
 # Pop gen - Ppratensis
 ## convert vcf to beagle
 final_vcf = "data/processed/filtered_snps/poa.pratensis.filtered.nocall.2dp20.max0.snps.vcf"
@@ -49,4 +50,16 @@ beagle = "data/bealge/ppratensis/poa.pratensis.{chrom}.beagle.gz"
 #gene = "data/gene/trnTtrnLtrnF/DQ354006.1.fasta"
 #sort_in = "data/interm/mapped_bam/trnTtrnLtrnF/{sample}.matk.mapped.bam"
 
+######### Calculate theta ###############
 
+# Boulder population
+bamlist = "data/interm/mark_dups/boulder_bamlist.txt"
+saf = "data/angsd_pi/boulder/pratensis.boulder.{chrom}.saf.gz"
+prefix = "data/angsd_pi/boulder/pratensis.boulder.{chrom}"
+ind = 5
+
+# Across populations
+#bamlist = "data/interm/mark_dups/crosspops_bamlist.txt"
+#saf = "data/angsd_pi/crosspops/pratensis.crosspops.{chrom}.saf.gz"
+#prefix = "data/angsd_pi/crosspops/pratensis.crosspops.{chrom}"
+ind = 3
