@@ -48,11 +48,13 @@ rule sam_mpileup:
         ref = config.ref,
         bam = "data/interm/sorted_bam/pacbio.sorted.bam"
     output:
-        vcf = "data/vcf/pacbio.vcf"
+        vcf = "data/vcf/pacbio.{chrom}.vcf"
+    params:
+        chr = "{chrom}"
     run:
         shell("module load bcftools")
         # default only sites with max 250 reads considered at each positin, this is way above the max coverage
         # -v option asks to output variant sites only (this is sufficient for the analyses we want to run)
-        shell("bcftools mpileup -Ou -f {input.ref} {input.bam} \
+        shell("bcftools mpileup -r {params.chr} -Ou -f {input.ref} {input.bam} \
         --annotate FORMAT/AD,FORMAT/DP | \
         bcftools call -mv -Oz -o {output.vcf}")

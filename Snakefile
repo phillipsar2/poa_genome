@@ -15,6 +15,9 @@ INTERVALS = ["{:04d}".format(x) for x in list(range(200))]
 # Set chromosome IDs
 CHROM = ["Super-Scaffold_107", "Super-Scaffold_475", "Super-Scaffold_13795", "Super-Scaffold_40012", "Super-Scaffold_1000001", "Super-Scaffold_1000002", "Super-Scaffold_1000003", "Super-Scaffold_1000004", "Super-Scaffold_1000005", "Super-Scaffold_1000006", "Super-Scaffold_1000007", "Super-Scaffold_1000008", "Super-Scaffold_1000009", "Super-Scaffold_1000011", "Super-Scaffold_1000012", "Super-Scaffold_1000013", "Super-Scaffold_1000014", "Super-Scaffold_1000015", "Super-Scaffold_1000016"]
 
+# Set window size for angsd sliding window statistics
+#WINDOW = ["50000"]
+
 # Set population. Options: ["all", "boulder", "manitoba"]
 POPL = ["all"]
 
@@ -41,12 +44,11 @@ rule all:
 #        calc_AB = "reports/filtering/all.poa.AB.estimate.txt",
         # Analysis of pop panel with angsd
 #        to_beagle = expand(config.beagle, chrom = CHROM),
-#        angsd_saf = expand("data/angsd_pi/{popl}--{chrom}.saf.gz", popl = POPL, chrom = CHROM),
-#        sfs = expand("data/angsd_pi/{popl}--{chrom}.sfs", popl = POPL, chrom = CHROM),
 #        pca = "data/angsd_pi/pca/Ppratensis.pcangsd.cov"
+        sfs = expand(config.sfs, chrom = CHROM),
+        pi = expand(config.stats, chrom = CHROM),
 ##### Rules for aligning pacbio reads
-        haplocaller = "data/vcf/pacbio.vcf",
-
+#        mpileup = expand("data/vcf/pacbio.{chrom}.vcf", chrom = CHROM),
 ##### Rules for identifying genes and building consensus sequences ####
         # SNP calling
 #        hap_vcf = expand("data/vcf/ETS/{sample}.vcf", sample = SAMPLE),
@@ -79,5 +81,5 @@ rule all:
 #include: "rules/consensus_seq.smk"
 #include: "rules/filtering.smk"
 #include: "rules/multiseq_align.smk"
-#include: "rules/pop_gen.smk"
+include: "rules/pop_gen.smk"
 include: "rules/ref_AB.smk"

@@ -7,7 +7,7 @@ rule sam_mpileup:
         bamlist = "data/interm/mark_dups/bamlist.txt"
     output:
         # outputs a gvcf but bcftools treats like vcf (?)
-        bcf = "data/bcf/all.poa.raw.bcf",
+        bcf = "data/bcf/all.poa.raw.bcf"
     run:
         shell("module load bcftools")
         # default only sites with max 250 reads considered at each positin, this is way above the max coverage
