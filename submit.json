@@ -1,9 +1,9 @@
 {
     "__default__" :
     {
-      "p" : "med2",
+      "p" : "bigmemm",
       "mem" : "16G",
-      "time" : "7-00:00",
+      "time" : "2-00:00",
       "name": "rando",
     },
     "bwa_map" :
@@ -96,7 +96,7 @@
     {
       "p" : "med2",
       "mem" : "32G",
-      "time" : "7-00:00",
+      "time" : "14-00:00",
       "name" : "sam_mpileup"
     },
     "joint_genotyping" :
@@ -165,9 +165,9 @@
     },
     "angsd_saf" :
     {
-      "mem": "64G",
-      "p" : "med2",
-      "time" : "7-00:00",
+      "mem": "16G",
+      "p" : "bigmemm",
+      "time" : "2-00:00",
       "name" : "angsd_saf",
     },
  "angsd_pca" :

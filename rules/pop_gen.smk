@@ -69,12 +69,12 @@ rule angsd_saf:
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 \
         -minMapQ 30 -minQ 30 \
         -doCounts 1 \
-        -setMinDepthInd 2 -setMaxDepthInd 20 \ 
-        -minInd {params.ind} \  
-        -ref {input.ref} -anc {input.ref} \ 
+        -setMinDepthInd 2 -setMaxDepthInd 20 \
+        -minInd {params.ind} \
+        -ref {input.ref} -anc {input.ref} \
         -doSaf 1 \
-        -r {params.chrom}
-        -bam {input.bamlist} \ 
+        -r {params.chrom} \
+        -bam {input.bamlist} \
         -out {params.prefix}")
 
 
@@ -93,31 +93,25 @@ rule pop_sfs:
         sfs = config.sfs
     params:
         prefix = config.prefix,
-    shell:
-        """
-#        module load angsd
-        realSFS {params.prefix}.saf.idx  -P 10 -fold 1> {params.prefix}.sfs
-        realSFS saf2theta {params.prefix}.saf.idx -sfs {params.prefix}.sfs -outname {params.prefix}
-        """
+    run:
+        shell("realSFS {params.prefix}.saf.idx  -P 10 -fold 1 > {params.prefix}.sfs")
+        shell("realSFS saf2theta {params.prefix}.saf.idx -sfs {params.prefix}.sfs -outname {params.prefix}")
 
-# calculate pi
+# calculate thetas (and neutrality tests) in sliding windows
+### when using a folded SFS, only thetaW (tW), thetaD (tP), and tajimasD will be meaningful in the output of realSFS
 rule pop_pi:
     input:
-        sfs = "data/angsd_pi/{popl}--{chrom}.sfs"
+        sfs = config.sfs
     output:
-        pi = "data/angsd_pi/{popl}--{chrom}.{window}BP_theta.thetasWindow.gz.pestPG"
+        config.stats
     params:
-        prefix_in = "data/angsd_pi/{popl}--{chrom}",
-        prefix_out = "data/angsd_pi/{popl}--{chrom}.{window}BP_theta",
-        win = "{window}"
+        prefix = config.prefix,
+        win = 50000
     shell:
         """
-        module load angsd
-        # calculate Tajimas D and other stats in sliding windows
-        thetaStat do_stat {params.prefix_in}.thetas.idx \
+        thetaStat do_stat {params.prefix}.thetas.idx \
         -win {params.win} \
-        -step {params.win} \
-        -outnames {params.prefix_out}.thetasWindow.gz
+        -step {params.win}
         """
 
 # run PCA
