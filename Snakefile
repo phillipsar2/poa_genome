@@ -45,11 +45,16 @@ rule all:
         # Analysis of pop panel with angsd
 #        to_beagle = expand(config.beagle, chrom = CHROM),
 #        pca = "data/angsd_pi/pca/Ppratensis.pcangsd.cov"
-        sfs = expand(config.sfs, chrom = CHROM),
-        pi = expand(config.stats, chrom = CHROM),
+#        sfs = expand(config.sfs, chrom = CHROM),
+#        pi = expand(config.stats, chrom = CHROM),
 ##### Rules for aligning pacbio reads
 #        mpileup = expand("data/vcf/pacbio.{chrom}.vcf", chrom = CHROM),
+#        diag = "reports/bamqc/pacbio/qualimapReport.html",
+##### Rules for identifying the APOSTART gene
+#        bwa = "data/interm/mapped_bam/apostat.mapped.bam",
 ##### Rules for identifying genes and building consensus sequences ####
+       # Call vcf
+        haplo = expand("data/vcf/trnLtrnF/{sample}.trnLtrnF.vcf", sample = SAMPLE),
         # SNP calling
 #        hap_vcf = expand("data/vcf/ETS/{sample}.vcf", sample = SAMPLE),
 #        hard_filt = expand("data/processed/filtered_snps_bpres/{sample}.ETS.filtered.snps.vcf", sample = SAMPLE),
@@ -76,10 +81,11 @@ rule all:
 
 # Rules
 #include: "rules/mapping.smk"
-#include: "rules/process_bam.smk"
+include: "rules/process_bam.smk"
 #include: "rules/calling.smk"
-#include: "rules/consensus_seq.smk"
+include: "rules/consensus_seq.smk"
 #include: "rules/filtering.smk"
 #include: "rules/multiseq_align.smk"
-include: "rules/pop_gen.smk"
-include: "rules/ref_AB.smk"
+#include: "rules/pop_gen.smk"
+#include: "rules/ref_AB.smk"
+#include:"rules/apostart.smk"

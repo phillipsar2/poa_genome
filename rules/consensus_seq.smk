@@ -3,16 +3,16 @@
 ## Align ##
 
 # Align a single gene to the chloroplast genome consensus sequences (rpoB-trnC;trnL-trnF)
-rule bwa_single:
-    input: 
-        gene = config.gene,
-        ref = "data/processed/pseudo_ref/{sample}.pseudo.fasta"
-    output:
-        "data/interm/mapped_bam/{sample}.rpoB-trn-C.mapped.bam"
-    run:
-        shell("bwa index {input.ref}")
-        shell("samtools faidx {input.ref}")
-        shell("bwa mem {input.ref} {input.gene} | samtools view -Sb > {output}")
+#rule bwa_single:
+#    input: 
+#        gene = config.gene,
+#        ref = "data/processed/pseudo_ref/{sample}.pseudo.fasta"
+#    output:
+#        "data/interm/mapped_bam/{sample}.rpoB-trn-C.mapped.bam"
+#    run:
+#        shell("bwa index {input.ref}")
+#        shell("samtools faidx {input.ref}")
+#        shell("bwa mem {input.ref} {input.gene} | samtools view -Sb > {output}")
 
 
 # or #
@@ -24,10 +24,9 @@ rule bwa_pull:
         r1 = "data/raw/sequences/{sample}_1.fq.gz",
         r2 = "data/raw/sequences/{sample}_2.fq.gz"
     output:
-        config.bwa_pull
-        "data/interm/mapped_bam/{sample}.ITS.mapped.bam"
+        config.sort_in
     log:
-        "logs/bwa_mem/{sample}.log"
+        "logs/bwa_pull/{sample}.log"
     shell:
         "(bwa mem -t 8 {input.ref} {input.r1} {input.r2} |"
         "samtools view -Sb > {output}) 2> {log}"
@@ -37,20 +36,20 @@ rule bwa_pull:
 ## Calling ##
 rule haplotype_caller_gene:
     input:
-        ref = config.ref, 
-        bam = config.mark_out
+        ref = config.gene, 
+        bam = config.mark_dups
     output:
-        outdir = "data/vcf/ETS/{sample}.vcf"
-    params:
-        regions = config.contig_list
+        config.haplo
+#    params:
+#        regions = config.contig_list
     run:
         shell("gatk HaplotypeCaller \
         --input {input.bam} \
-        --output {output.outdir} \
+        --output {output} \
         --reference {input.ref} \
-#        --G StandardAnnotation \
-#        -G AS_StandardAnnotation \
-        -L {params.regions}")
+        --G StandardAnnotation \
+        -G AS_StandardAnnotation")
+#        -L {params.regions}")
 #        -ERC BP_RESOLUTION")
 
 ## Extract SNPs ##
@@ -93,32 +92,32 @@ rule bcf_to_iupac:
 # Generate pseudo reference chloroplast genomes with gatk4 FastaAlternateReferenceMaker
 # If there are multiple variants that start at a site, it chooses one of them randomly
 # This tol only works for SNPs and simple indels
-rule pseudo_ref:
-    input:
-        ref = config.ref,
-        vcf = "data/processed/filtered_snps_bpres/{sample}.ETS.filtered.snps.vcf"
-    output:
+#rule pseudo_ref:
+#    input:
+#        ref = config.ref,
+#        vcf = "data/processed/filtered_snps_bpres/{sample}.ETS.filtered.snps.vcf"
+#    output:
 #        "data/processed/pseudo_ref/{sample}.pseudo.fasta"
-        "data/gene/ETS/{sample}.consensus.ETS.fasta"
-    run:
+#        "data/gene/ETS/{sample}.consensus.ETS.fasta"
+#    run:
 #        shell("gatk IndexFeatureFile -I {input.vcf}")
-        shell("gatk FastaAlternateReferenceMaker \
-        -R {input.ref} \
-        -O {output} \
-        -V {input.vcf}")
+#        shell("gatk FastaAlternateReferenceMaker \
+#        -R {input.ref} \
+#        -O {output} \
+#       -V {input.vcf}")
 
 
 # or #
 
 # Pull the gene sequences out of the pseudo-chloroplast genome
-rule get_gene:
-    input:
-        "data/processed/pseudo_ref/{sample}.pseudo.fasta"
-    output:
-        "data/processed/gene/trnTtrnLtrnF/{sample}.trnTtrnLtrnF.fasta"
-    params:
-        pos = 17886,
-        len = 1116
-    rule:
-        shell("~/toolsfordayz/bioawk/bioawk -c fastx ''{{ print $seq }}'' {input} | \
-        awk ''{{print substr($1,17889,1116) }}'' >> {output}")
+#rule get_gene:
+#    input:
+#        "data/processed/pseudo_ref/{sample}.pseudo.fasta"
+#    output:
+#        "data/processed/gene/trnTtrnLtrnF/{sample}.trnTtrnLtrnF.fasta"
+#    params:
+#        pos = 17886,
+#        len = 1116
+#    rule:
+#        shell("~/toolsfordayz/bioawk/bioawk -c fastx ''{{ print $seq }}'' {input} | \
+#        awk ''{{print substr($1,17889,1116) }}'' >> {output}")

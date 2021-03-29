@@ -24,23 +24,24 @@ rule sort_pacbioBam:
         shell("samtools sort -T {params.tmp} {input} > {output}")
         shell("rm -rf {params.tmp}")
 
-# call variable sites in the reference
-#rule haplotype_caller:
-#    input:
-#        ref = config.ref, 
-#        bam = "data/interm/sorted_bam/pacbio.sorted.bam"
-#    output:
-#        outdir = "data/vcf/pacbio.vcf"
-#    params:
-#        regions = config.contig_list
-#    run:
-#        shell("gatk HaplotypeCaller \
-#        --input {input.bam} \
-#        --output {output.outdir} \
-#        --reference {input.ref} \
-#        --G StandardAnnotation \
-#        -G AS_StandardAnnotation \
-#        -L {params.regions}")
+# Quality metrics with qualimap
+rule bamqc:
+    input:
+        "data/interm/sorted_bam/pacbio.sorted.bam"
+    output:
+        "reports/bamqc/pacbio/qualimapReport.html"
+    params:
+        dir = "reports/bamqc/pacbio"
+    run: 
+        shell("qualimap bamqc \
+        -bam {input} \
+        -nt 8 \
+        -nr 100000 \
+        -outdir {params.dir} \
+        -outformat HTML \
+        --skip-duplicated \
+        --java-mem-size=64G")
+
 
 # call variable sites but with mpileup
 rule sam_mpileup:

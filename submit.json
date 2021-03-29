@@ -33,7 +33,7 @@
       "p" : "med2",
       "mem" : "16G",
 # typically 32 or 48
-      "time" : "7-00:00",
+      "time" : "2-00:00",
       "name " : "samtools_sort",
     },
     "samtools_samtobam" :
@@ -54,13 +54,13 @@
     {
       "p" : "med2",
       "mem" : "40G",
-      "time" : "7-00:00",
+      "time" : "2-00:00",
       "name" : "mark_dups",
     },
     "bamqc" :
     {
       "p" : "med2",
-      "mem" : "48G",
+      "mem" : "72G",
       "time" : "7-00:00",
       "name" : "bamqc",
     },
@@ -68,7 +68,7 @@
     {
       "p" : "high2",
       "mem" : "24G",
-      "time" : "7-00:00",
+      "time" : "2-00:00",
       "name" : "haplotype_caller"
     },
     "split_intervals" :
@@ -94,7 +94,7 @@
     },
     "sam_mpileup" :
     {
-      "p" : "med2",
+      "p" : "med",
       "mem" : "32G",
       "time" : "14-00:00",
       "name" : "sam_mpileup"
@@ -160,7 +160,7 @@
       "mem": "32G",
 # typically 64
       "p" : "med2",
-      "time" : "7-00:00",
+      "time" : "2-00:00",
       "name" : "bwa_pull",
     },
     "angsd_saf" :
