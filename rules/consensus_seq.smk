@@ -47,14 +47,40 @@ rule haplotype_caller_gene:
         --input {input.bam} \
         --output {output} \
         --reference {input.ref} \
-        --G StandardAnnotation \
-        -G AS_StandardAnnotation")
+        --G StandardAnnotation")
+#        -G AS_StandardAnnotation")
 #        -L {params.regions}")
 #        -ERC BP_RESOLUTION")
 
 ## Extract SNPs ##
+rule get_snps:
+    input:
+        ref = config.gene,
+        vcf = "data/vcf/mpileup/all.poa.raw.vcf.gz"
+    output:
+        "data/vcf/mpileup/all.poa.snps.vcf"
+    run:
+        shell("gatk SelectVariants \
+        -R {input.ref} \
+        -V {input.vcf} \
+        -select-type SNP \
+        -O {output}")
 
 ## Hard filter ## (see other rule)
+rule hard_filter:
+    input:
+        ref = config.gene,
+        vcf = "data/vcf/mpileup/all.poa.snps.vcf"
+    output:
+        filt =  "data/processed/filtered_snps/all.poa.filtered.snps.vcf",
+        exclude = "data/processed/filtered_snps/all.poa.filtered.nocall.snps.vcf"
+    run:
+        shell("gatk VariantFiltration \
+        -V {input.vcf} \
+        -filter \"QUAL < 40.0\" --filter-name \"QUAL40\" \
+        -filter \"MQ < 40.0\" --filter-name \"MQ40\" \
+        -O {output.filt}")
+        shell("gatk SelectVariants -V {output.filt} --exclude-filtered true  -O {output.exclude}")
 
 ## Generate consensus sequence ##
 
