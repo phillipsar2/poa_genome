@@ -14,28 +14,28 @@ There are three groups of analyses:
 
 ## Project Organization
 
-├── README.md <- The top-level README.md for Poa enthusiasts that want to replicate these analyses.
-├── rules
-|   ├── consensus_seq.smk
-|   ├── pop_gen.smk
-|   └── ref_AB.smk
-├── environment.yml
-├── scripts
-│   ├── allelebalance_filter.sh
-│   └── allelebalance_filter.R
-├── notebooks
-│   └── 
-├── data
-│   ├── raw <- The original WGS data dump.
-│   ├── interm  <- Intermediate data that has been transformed.
-│   ├── processed <- The final datasets for modeling.
-│   ├── vcf <- The unfiltered vcfs.
-│   ├── gene <- Genes downloaded from NCBI. 
-│   └── genome <- The reference genome.
-├── reports <- Generated analyses as HTML, PDF, or .txt. 
-├── Snakefile
-├── config.py
-├── results
-├── submit.json
-└── submit.sh
+├── README.md <- The top-level README.md for Poa enthusiasts that want to replicate these analyses.   
+├── rules    
+|   ├── consensus_seq.smk   
+|   ├── pop_gen.smk   
+|   └── ref_AB.smk   
+├── environment.yml   
+├── scripts   
+│   ├── allelebalance_filter.sh   
+│   └── allelebalance_filter.R   
+├── notebooks   
+│   └──    
+├── data   
+│   ├── raw <- The original WGS data dump.   
+│   ├── interm  <- Intermediate data that has been transformed.   
+│   ├── processed <- The final datasets for modeling.   
+│   ├── vcf <- The unfiltered vcfs.   
+│   ├── gene <- Genes downloaded from NCBI.    
+│   └── genome <- The reference genome.   
+├── reports <- Generated analyses as HTML, PDF, or .txt.    
+├── Snakefile   
+├── config.py   
+├── results   
+├── submit.json   
+└── submit.sh   
 
