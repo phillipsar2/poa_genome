@@ -13,30 +13,30 @@ rule vcf_to_beagle:
         shell("vcftools --vcf {input.vcf} --BEAGLE-PL --stdout --chr {params.chr} > {output}")
 
 # subset Boulder individuals
-rule grab_boulder:
-    input:
-        vcf = "data/proccessed/filtered_snps/poa.pratensis.filtered.nocall.2dp20.max0.snps.vcf",
-        samples = "data/raw/boulder_samples.txt"
-    output:
-        "data/beagle/boulder/pratensis.boulder.{CHROM}.BEAGLE.PL.gz"
-    params:
-        chr = "{chrom}"
-    run:
-        shell("bcftools view -S {input.samples} {input.vcf} | \
-        vcftools --vcf - --BEAGLE-PL --stdout --chr {params.chr} > {output}")
+#rule grab_boulder:
+#    input:
+#        vcf = "data/proccessed/filtered_snps/poa.pratensis.filtered.nocall.2dp20.max0.snps.vcf",
+#        samples = "data/raw/boulder_samples.txt"
+#    output:
+#        "data/beagle/boulder/pratensis.boulder.{CHROM}.BEAGLE.PL.gz"
+#    params:
+#        chr = "{chrom}"
+#    run:
+#        shell("bcftools view -S {input.samples} {input.vcf} | \
+#        vcftools --vcf - --BEAGLE-PL --stdout --chr {params.chr} > {output}")
 
 # subset Manitoba individuals + 1 Boulder individual
-rule grab_crosspops:
-    input:
-        vcf = "poa.pratensis.filtered.nocall.2dp20.max0.snps.vcf",
-        samples = "data/raw/crosspops_samples.txt"
-    output:
-        "data/beagle/crosspops/pratensis.crosspops.{CHROM}.BEAGLE.PL.gz"
-    params:
-        chr = "{chrom}"
-    run:
-        shell("bcftools view -S {input.samples} {input.vcf} | \
-        vcftools --vcf - --BEAGLE-PL --stdout --chr {params.chr} > {output}")
+#rule grab_crosspops:
+#    input:
+#        vcf = "poa.pratensis.filtered.nocall.2dp20.max0.snps.vcf",
+#        samples = "data/raw/crosspops_samples.txt"
+#    output:
+#        "data/beagle/crosspops/pratensis.crosspops.{CHROM}.BEAGLE.PL.gz"
+#    params:
+#        chr = "{chrom}"
+#    run:
+#        shell("bcftools view -S {input.samples} {input.vcf} | \
+#        vcftools --vcf - --BEAGLE-PL --stdout --chr {params.chr} > {output}")
 
 
 ## Generating saf file - site allele frequency likelihood
@@ -66,10 +66,11 @@ rule angsd_saf:
 #        -beagle {input.beagle} \     
 #        -out {params.prefix}")
         shell("angsd -GL 1 -P 15 \
+        -doGlf 2 \
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 \
         -minMapQ 30 -minQ 30 \
         -doCounts 1 \
-        -setMinDepthInd 2 -setMaxDepthInd 20 \
+        -setMinDepthInd 2 -setMaxDepthInd 4 \
         -minInd {params.ind} \
         -ref {input.ref} -anc {input.ref} \
         -doSaf 1 \
@@ -103,22 +104,50 @@ rule pop_pi:
     input:
         sfs = config.sfs
     output:
-        config.stats
+        stats = config.stats
     params:
         prefix = config.prefix,
-        win = 50000
-    shell:
-        """
-        thetaStat do_stat {params.prefix}.thetas.idx \
+        win = 10000
+    run:
+        shell("thetaStat do_stat {params.prefix}.thetas.idx \
         -win {params.win} \
-        -step {params.win}
-        """
+        -step {params.win}")
+       # merge the files
+#        shell("cat <(cat *.thetas.idx.pestPG | head -n1) <(cat *.thetas.idx.pestPG | grep -v nSites) > all.boulder.thetas.idx.pestPG")
 
-# run PCA
+### PCA --------
+
+# generate GL in beagle format
+rule angsd_beagle:
+    input:
+        ref = config.ref,
+        bamlist = "data/interm/mark_dups/all_poa_bamlist.txt.txt"
+    output:
+        "data/pca/all.poa.{chrom}.saf.gz"
+    params:
+        prefix = "data/pca/all.poa.{chrom}",
+        chrom = "{chrom}"
+    run:
+        shell("angsd -GL 1 -P 15 \
+        -doGlf 2 \
+        -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 \
+        -minMapQ 30 -minQ 30 \
+        -doCounts 1 \
+        -setMinDepthInd 2 -setMaxDepthInd 4 \
+        -minInd 8 \
+        -ref {input.ref} -anc {input.ref} \
+        -r {params.chrom} \
+        -bam {input.bamlist} \
+        -out {params.prefix}")
+
 rule angsd_pca:
     input:
-        beagle ="data/angsd_pi/Ppratensis.beagle.gz"
+        beagle ="data/pca/all.poa.merged.beagle.gz"
     output:
-        pca = "data/angsd_pi/pca/Ppratensis.pcangsd.cov"
+        pca = "data/pca/all.poa.pcangsd.cov"
     run:
-        shell("python tools/pcangsd/pcangsd.py -beagle {input.beagle} -o {output._pca}")
+#        shell("cat <(zcat data/angsd_pi/*BEAGLE.PL.gz | head -n1) <(zcat data/angsd_pi/*BEAGLE.PL.gz | 
+#        grep -v marker) > data/angsd_pi/all.poa.merged.BEAGLE.PL")
+#        shell("gzip data/beagle/all-poa/all.poa.merged.BEAGLE.PL")        
+        shell("python tools/pcangsd/pcangsd.py -beagle {input.beagle} -o {output}")
+
