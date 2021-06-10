@@ -13,7 +13,7 @@ There are three groups of analyses:
 ## Workflow
 
 ## Project Organization
- 
+</pre>
 ├── README.md <- The top-level README.md for Poa enthusiasts that want to replicate these analyses.   
 ├── rules    
 |   ├── consensus_seq.smk   
@@ -38,4 +38,4 @@ There are three groups of analyses:
 ├── results   
 ├── submit.json   
 └── submit.sh   
-
+</pre>
