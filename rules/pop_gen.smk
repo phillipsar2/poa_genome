@@ -118,10 +118,11 @@ rule pop_pi:
 ### PCA --------
 
 # generate GL in beagle format
+# doMajorMinor 4: use refence allele as major
 rule angsd_beagle:
     input:
         ref = config.ref,
-        bamlist = "data/interm/mark_dups/all_poa_bamlist.txt.txt"
+        bamlist = "data/interm/mark_dups/all_poa_bamlist.txt"
     output:
         "data/pca/all.poa.{chrom}.saf.gz"
     params:
@@ -130,6 +131,7 @@ rule angsd_beagle:
     run:
         shell("angsd -GL 1 -P 15 \
         -doGlf 2 \
+        -doMajorMinor 4 \
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 \
         -minMapQ 30 -minQ 30 \
         -doCounts 1 \
