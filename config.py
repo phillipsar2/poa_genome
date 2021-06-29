@@ -1,7 +1,7 @@
 ### Calling SNPs for whole genome ###
 
 # Genome
-#ref = "data/genome/poa_01062021/Ppratensis.normalized.nonull.fasta"
+ref = "data/genome/poa_01062021/Ppratensis.normalized.nonull.fasta"
 #contig_list = "data/genome/poa_01062021/Ppratensis.contig.list"
 #sample_map = "data/processed/poa.sample_map"
 
@@ -27,18 +27,7 @@
 # Evaluating allele balance and depth - Ppratensis
 ab_table = "reports/filtering/pPratensis.AB.table"
 
-
-# Pop gen - Ppratensis
-## convert vcf to beagle
-final_vcf = "data/processed/filtered_snps/poa.pratensis.filtered.nocall.2dp20.max0.snps.vcf"
-beagle = "data/beagle/ppratensis/poa.pratensis.{chrom}.beagle.gz"
-
-# Pop gen - all Poa
-## convert vcf to beagle
-#final_vcf = "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.max0.snps.vcf"
-#beagle = "data/beagle/all-poa/all.poa.{chrom}.BEAGLE.PL"
-
-### Consensus sequence building ###
+## Consensus sequence building --------
 
 # Pulling out the chloroplast pseudogenomes
 #sort_out = "data/sorted_bam/{sample}.TLF.ref.sorted.bam"
@@ -53,20 +42,33 @@ mark_dups = "data/interm/mark_dups/{sample}.trnLtrnF.dedup.bam"
 
 haplo = "data/vcf/trnLtrnF/{sample}.trnLtrnF.vcf"
 
-######### Calculate theta ###############
+# Nucleotide diversity --------
 
-# Boulder population
+## Boulder population
 #bamlist = "data/interm/mark_dups/boulder_bamlist.txt"
-#saf = "data/angsd_pi/boulder/pratensis.boulder.{chrom}.saf.gz"
-#prefix = "data/angsd_pi/boulder/pratensis.boulder.{chrom}"
+#saf = "data/angsd_pi/boulder/pratensis.boulder.{chrom}.2dp6.saf.gz"
+#prefix = "data/angsd_pi/boulder/pratensis.boulder.{chrom}.2dp6"
 #ind = 5
-#sfs = "data/angsd_pi/boulder/pratensis.boulder.{chrom}.sfs"
-#stats = "data/angsd_pi/boulder/pratensis.boulder.{chrom}.thetas.idx.pestPG"
+#sfs = "data/angsd_pi/boulder/pratensis.boulder.{chrom}.2dp6.sfs"
+#stats = "data/angsd_pi/boulder/pratensis.boulder.{chrom}.2dp6.thetas.idx.pestPG"
 
-# Across populations
-#bamlist = "data/interm/mark_dups/crosspops_bamlist.txt"
-#saf = "data/angsd_pi/crosspops/pratensis.crosspops.{chrom}.saf.gz"
-#prefix = "data/angsd_pi/crosspops/pratensis.crosspops.{chrom}"
-#ind = 3
-#sfs = "data/angsd_pi/crosspops/pratensis.crosspops.{chrom}.sfs"
-#stats = "data/angsd_pi/crosspops/pratensis.crosspops.{chrom}.thetas.idx.pestPG"
+## Across populations
+bamlist = "data/interm/mark_dups/crosspops_bamlist.txt"
+saf = "data/angsd_pi/crosspops/pratensis.crosspops.{chrom}.2dp6.saf.gz"
+prefix = "data/angsd_pi/crosspops/pratensis.crosspops.{chrom}.2dp6"
+ind = 3
+sfs = "data/angsd_pi/crosspops/pratensis.crosspops.{chrom}.2dp6.sfs"
+stats = "data/angsd_pi/crosspops/pratensis.crosspops.{chrom}.2dp6.thetas.idx.pestPG"
+
+
+# PCA from snps --------
+## convert vcf to beagle
+final_vcf = "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.max0.snps.vcf"
+beagle = "data/beagle/all-poa/all.poa.{chrom}.BEAGLE.PL"
+
+## generate beagle file for pca
+#bamlist = "data/interm/mark_dups/all_poa_bamlist.txt.txt"
+#saf = "data/pca/all.poa.{chrom}.saf.gz"
+#prefix = "data/pca/all.poa.{chrom}"
+#ind = 8
+

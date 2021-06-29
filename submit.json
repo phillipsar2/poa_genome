@@ -1,9 +1,9 @@
 {
     "__default__" :
     {
-      "p" : "bigmemm",
+      "p" : "med2",
       "mem" : "16G",
-      "time" : "2-00:00",
+      "time" : "1-00:00",
       "name": "rando",
     },
     "bwa_map" :
@@ -11,7 +11,7 @@
       "mem": "32G",
 # typically 64
       "p" : "med2",
-      "time" : "7-00:00",
+      "time" : "2-00:00",
       "name" : "bwa_map",
     },
     "bwa_ref" :
@@ -33,7 +33,7 @@
       "p" : "med2",
       "mem" : "16G",
 # typically 32 or 48
-      "time" : "2-00:00",
+      "time" : "1-00:00",
       "name " : "samtools_sort",
     },
     "samtools_samtobam" :
@@ -54,7 +54,7 @@
     {
       "p" : "med2",
       "mem" : "40G",
-      "time" : "2-00:00",
+      "time" : "1-00:00",
       "name" : "mark_dups",
     },
     "bamqc" :
@@ -68,7 +68,7 @@
     {
       "p" : "high2",
       "mem" : "24G",
-      "time" : "2-00:00",
+      "time" : "1-00:00",
       "name" : "haplotype_caller"
     },
     "split_intervals" :
@@ -148,7 +148,7 @@
       "time" : "7-00:00",
       "name" : "combine_vcfs"
     },
-    "calc_Ab" :
+    "calc_AB" :
     {
       "p" : "med2",
       "mem" : "32G",

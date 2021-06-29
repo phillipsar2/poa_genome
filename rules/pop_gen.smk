@@ -12,32 +12,8 @@ rule vcf_to_beagle:
         shell("module load vcftools")
         shell("vcftools --vcf {input.vcf} --BEAGLE-PL --stdout --chr {params.chr} > {output}")
 
-# subset Boulder individuals
-#rule grab_boulder:
-#    input:
-#        vcf = "data/proccessed/filtered_snps/poa.pratensis.filtered.nocall.2dp20.max0.snps.vcf",
-#        samples = "data/raw/boulder_samples.txt"
-#    output:
-#        "data/beagle/boulder/pratensis.boulder.{CHROM}.BEAGLE.PL.gz"
-#    params:
-#        chr = "{chrom}"
-#    run:
-#        shell("bcftools view -S {input.samples} {input.vcf} | \
-#        vcftools --vcf - --BEAGLE-PL --stdout --chr {params.chr} > {output}")
 
-# subset Manitoba individuals + 1 Boulder individual
-#rule grab_crosspops:
-#    input:
-#        vcf = "poa.pratensis.filtered.nocall.2dp20.max0.snps.vcf",
-#        samples = "data/raw/crosspops_samples.txt"
-#    output:
-#        "data/beagle/crosspops/pratensis.crosspops.{CHROM}.BEAGLE.PL.gz"
-#    params:
-#        chr = "{chrom}"
-#    run:
-#        shell("bcftools view -S {input.samples} {input.vcf} | \
-#        vcftools --vcf - --BEAGLE-PL --stdout --chr {params.chr} > {output}")
-
+## Nucleotide diversity ----
 
 ## Generating saf file - site allele frequency likelihood
 # -GL 1: samtools method for GL, request 15 threads,
@@ -52,7 +28,6 @@ rule vcf_to_beagle:
 
 rule angsd_saf:
     input:
-#        beagle = "data/beagle/boulder/pratensis.boulder.merged.BEAGLE.PL.gz"
         ref = config.ref,
         bamlist = config.bamlist
     output:
@@ -62,15 +37,11 @@ rule angsd_saf:
         prefix = config.prefix,
         chrom = "{chrom}"
     run:
-#        shell("angsd -doSaf 4 \
-#        -beagle {input.beagle} \     
-#        -out {params.prefix}")
         shell("angsd -GL 1 -P 15 \
-        -doGlf 2 \
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 \
         -minMapQ 30 -minQ 30 \
         -doCounts 1 \
-        -setMinDepthInd 2 -setMaxDepthInd 4 \
+        -setMinDepthInd 2 -setMaxDepthInd 6 \
         -minInd {params.ind} \
         -ref {input.ref} -anc {input.ref} \
         -doSaf 1 \
@@ -88,17 +59,16 @@ rule angsd_saf:
 rule pop_sfs:
     input:
         ref = config.ref,
-#        bams = "data/interm/mark_dups/bamlist.txt",
         saf = config.saf
     output:
         sfs = config.sfs
     params:
-        prefix = config.prefix,
+        prefix = config.prefix
     run:
         shell("realSFS {params.prefix}.saf.idx  -P 10 -fold 1 > {params.prefix}.sfs")
         shell("realSFS saf2theta {params.prefix}.saf.idx -sfs {params.prefix}.sfs -outname {params.prefix}")
 
-# calculate thetas (and neutrality tests) in sliding windows
+# calculate thetas (and neutrality tests) in 10k sliding windows
 ### when using a folded SFS, only thetaW (tW), thetaD (tP), and tajimasD will be meaningful in the output of realSFS
 rule pop_pi:
     input:
@@ -119,14 +89,15 @@ rule pop_pi:
 
 # generate GL in beagle format
 # doMajorMinor 4: use refence allele as major
+# assuming a mean coverage of 2X, 99% of sites should have 6X coverage in a poission distribution; ppois(6, lambda = 2)
 rule angsd_beagle:
     input:
         ref = config.ref,
-        bamlist = "data/interm/mark_dups/all_poa_bamlist.txt"
+        bamlist = "data/interm/mark_dups/bamlist.txt"
     output:
-        "data/pca/all.poa.{chrom}.saf.gz"
+        "data/pca/all.poa.{chrom}.2dp6.beagle.gz"
     params:
-        prefix = "data/pca/all.poa.{chrom}",
+        prefix = "data/pca/all.poa.{chrom}.2dp6",
         chrom = "{chrom}"
     run:
         shell("angsd -GL 1 -P 15 \
@@ -135,7 +106,7 @@ rule angsd_beagle:
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 \
         -minMapQ 30 -minQ 30 \
         -doCounts 1 \
-        -setMinDepthInd 2 -setMaxDepthInd 4 \
+        -setMinDepthInd 2 -setMaxDepthInd 6 \
         -minInd 8 \
         -ref {input.ref} -anc {input.ref} \
         -r {params.chrom} \
@@ -144,12 +115,11 @@ rule angsd_beagle:
 
 rule angsd_pca:
     input:
-        beagle ="data/pca/all.poa.merged.beagle.gz"
+        beagle = expand("data/pca/all.poa.{chrom}.2dp6.beagle.gz", chrom = CHROM)
     output:
-        pca = "data/pca/all.poa.pcangsd.cov"
+        pca = "data/pca/all.poa.pcangsd.2dp6.cov"
     run:
-#        shell("cat <(zcat data/angsd_pi/*BEAGLE.PL.gz | head -n1) <(zcat data/angsd_pi/*BEAGLE.PL.gz | 
-#        grep -v marker) > data/angsd_pi/all.poa.merged.BEAGLE.PL")
-#        shell("gzip data/beagle/all-poa/all.poa.merged.BEAGLE.PL")        
-        shell("python tools/pcangsd/pcangsd.py -beagle {input.beagle} -o {output}")
-
+#        shell("cat <(zcat data/pca/*beagle.gz | head -n1) <(zcat data/pca/*beagle.gz | \
+#        grep -v marker) > data/pca/all.poa.merged.2dp6.beagle")
+        shell("gzip data/pca/all.poa.merged.2dp6.beagle")        
+        shell("python tools/pcangsd/pcangsd.py -beagle data/pca/all.poa.merged.2dp6.beagle.gz -o data/pca/all.poa.pcangsd.2dp6")

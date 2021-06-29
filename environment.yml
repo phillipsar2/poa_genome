@@ -12,3 +12,4 @@ dependencies:
   - snakemake=5.4.*
   - maven
   - R 
+  - angsd=0.934

@@ -6,8 +6,8 @@ rule samtools_sort:
     output:
         temp(config.sort_out),
     params:
-#        tmp = "/scratch/aphillip/sort_bam/{sample}"
-        tmp = "/scratch/aphillip/sort_bam/pacbio"    
+        tmp = "/scratch/aphillip/sort_bam/{sample}"
+#        tmp = "/scratch/aphillip/sort_bam/pacbio"    
     run:
         shell("mkdir -p {params.tmp}")
         shell("samtools sort -T {params.tmp} {input} > {output}")

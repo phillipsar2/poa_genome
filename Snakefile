@@ -15,9 +15,6 @@ INTERVALS = ["{:04d}".format(x) for x in list(range(200))]
 # Set chromosome IDs
 CHROM = ["Super-Scaffold_107", "Super-Scaffold_475", "Super-Scaffold_13795", "Super-Scaffold_40012", "Super-Scaffold_1000001", "Super-Scaffold_1000002", "Super-Scaffold_1000003", "Super-Scaffold_1000004", "Super-Scaffold_1000005", "Super-Scaffold_1000006", "Super-Scaffold_1000007", "Super-Scaffold_1000008", "Super-Scaffold_1000009", "Super-Scaffold_1000011", "Super-Scaffold_1000012", "Super-Scaffold_1000013", "Super-Scaffold_1000014", "Super-Scaffold_1000015", "Super-Scaffold_1000016"]
 
-# Set window size for angsd sliding window statistics
-#WINDOW = ["50000"]
-
 # Set population. Options: ["all", "boulder", "manitoba"]
 POPL = ["all"]
 
@@ -35,26 +32,30 @@ rule all:
 #        split_int = expand("data/processed/scattered_intervals/{interval}-scattered.interval_list", interval = INTERVALS),
 #        joint_geno = expand("data/raw/vcf_bpres/{interval}.raw.vcf", interval = INTERVALS),
         # Filter SNPs
-#         hard_filt = "data/processed/filtered_snps/all.poa.filtered.nocall.snps.vcf",
-#         diag_depth = "reports/filtering/all.poa.depth.filtered.nocall.table",
-#         filter_depth = "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.snps.vcf",
-#        dp_nocall = "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.max0.snps.vcf",
+#        hard_filt = "data/processed/filtered_snps/all.poa.filtered.nocall.snps.vcf",
+#        diag_depth = "reports/filtering/all.poa.depth.filtered.nocall.table",
+#        filter_depth = "data/processed/filtered_snps/all.poa.filtered.nocall.2dp20.snps.vcf",
 #        grab_Ppr = "data/processed/filtered_snps/poa.pratensis.filtered.nocall.2dp20.max0.snps.vcf",
 #        diag_AB = config.ab_table,
 #        calc_AB = "reports/filtering/all.poa.AB.estimate.txt",
-        # Analysis of pop panel with angsd
+        # Nucleotide diversity
 #        to_beagle = expand(config.beagle, chrom = CHROM),
-#        pca = "data/angsd_pi/pca/Ppratensis.pcangsd.cov"
-#        sfs = expand(config.sfs, chrom = CHROM),
-#        pi = expand(config.stats, chrom = CHROM),
+        sfs = expand(config.sfs, chrom = CHROM),
+        pi = expand(config.stats, chrom = CHROM),
+        # PCA
+#        beagle = expand("data/pca/all.poa.{chrom}.beagle.gz", chrom = CHROM),
+        pca = "data/pca/all.poa.pcangsd.2dp6.cov"
 ##### Rules for aligning pacbio reads
 #        mpileup = expand("data/vcf/pacbio.{chrom}.vcf", chrom = CHROM),
 #        diag = "reports/bamqc/pacbio/qualimapReport.html",
+#         merge_vcf = "pacbio.all_scaff.vcf.gz",
+#        diag_ab = "reports/filtering/pacbio.AB.table",
+#        calc_ab = "reports/filtering/pacbio.AB.estimate.txt",
 ##### Rules for identifying the APOSTART gene
 #        bwa = "data/interm/mapped_bam/apostat.mapped.bam",
 ##### Rules for identifying genes and building consensus sequences ####
        # Call vcf
-        haplo = expand("data/vcf/trnLtrnF/{sample}.trnLtrnF.vcf", sample = SAMPLE),
+#        haplo = expand("data/vcf/trnLtrnF/{sample}.trnLtrnF.vcf", sample = SAMPLE),
         # SNP calling
 #        hap_vcf = expand("data/vcf/ETS/{sample}.vcf", sample = SAMPLE),
 #        hard_filt = expand("data/processed/filtered_snps_bpres/{sample}.ETS.filtered.snps.vcf", sample = SAMPLE),
@@ -81,11 +82,11 @@ rule all:
 
 # Rules
 #include: "rules/mapping.smk"
-include: "rules/process_bam.smk"
+#include: "rules/process_bam.smk"
 #include: "rules/calling.smk"
-include: "rules/consensus_seq.smk"
+#include: "rules/consensus_seq.smk"
 #include: "rules/filtering.smk"
 #include: "rules/multiseq_align.smk"
-#include: "rules/pop_gen.smk"
+include: "rules/pop_gen.smk"
 #include: "rules/ref_AB.smk"
 #include:"rules/apostart.smk"

@@ -47,7 +47,7 @@ rule hard_filter:
     run:
         shell("gatk VariantFiltration \
         -V {input.vcf} \
-        -filter \"QUAL < 40.0\" --filter-name \"QUAL30\" \
+        -filter \"QUAL < 40.0\" --filter-name \"QUAL40\" \
         -filter \"MQ < 40.0\" --filter-name \"MQ40\" \
         -O {output.filt}")
         shell("gatk SelectVariants -V {output.filt} --exclude-filtered true  --restrict-alleles-to BIALLELIC -O {output.exclude}")
@@ -126,11 +126,11 @@ rule diag_ab:
 # calculate allele balance (AB) at every site
 rule calc_AB:
     input:
-        "reports/filtering/all.poa.AB.table"
+        "../reports/filtering/all.poa.AB.table"
     output:
-        "reports/filtering/all.poa.AB.estimate.txt"
+        "../reports/filtering/all.poa.AB.estimate.txt"
     script:
-        "scripts/allelebalance_filter.R"
+        "../scripts/allelebalance_filter.R"
 
 
 

@@ -53,9 +53,45 @@ rule sam_mpileup:
     params:
         chr = "{chrom}"
     run:
-        shell("module load bcftools")
         # default only sites with max 250 reads considered at each positin, this is way above the max coverage
         # -v option asks to output variant sites only (this is sufficient for the analyses we want to run)
         shell("bcftools mpileup -r {params.chr} -Ou -f {input.ref} {input.bam} \
         --annotate FORMAT/AD,FORMAT/DP | \
         bcftools call -mv -Oz -o {output.vcf}")
+
+# merge the reference scaffold vcfs for ease of use
+rule merge_vcfs:
+    input:
+        "data/vcf/pacbio_variant_files.list"
+    output:
+        "data/vcf/pacbio.all_scaff.vcf.gz"
+    run:
+        shell("bcftools concat -f {input} -O z -o {output}")
+
+# Extract GT and DP for calculating AB
+rule diag_ab:
+    input:
+        vcf = "data/vcf/pacbio.all_scaff.vcf.gz",
+        ref = config.ref
+    output:
+        "reports/filtering/pacbio.AB.table"
+    run:
+        shell("tabix -p vcf {input.vcf}")
+        shell("gatk VariantsToTable \
+        -R {input.ref} \
+        -V {input.vcf} \
+        -F CHROM -F POS -GF GT -GF AD \
+        -O {output}")
+
+# calculate allele balance (AB) at every site
+rule calc_AB:
+    input:
+        "reports/filtering/pacbio.AB.table"
+    output:
+        "reports/filtering/pacbio.AB.estimate.txt"
+#    params:
+#        "1"
+#    conda:
+#        "env/r4.yaml"
+    shell:
+        "Rscript scripts/allelebalance_filter.R"
