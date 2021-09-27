@@ -1,4 +1,7 @@
-# calculating allele balance for the reference genome
+# Calculating allele balance for the reference genome
+
+
+# (1) Align error corrected PacBio reads to the super scaffolds
 rule map_pacbio:
     input:
         ref = config.ref,
@@ -6,7 +9,6 @@ rule map_pacbio:
     output:
         bam = temp("data/interm/mapped_bam/pacbio.mapped.bam")
     run:
-#        shell("module load minimap2/2.16r922")
         shell("minimap2 -ax map-pb {input.ref} {input.pacbio} | \
         samtools view -Sb > {output.bam}")
 
