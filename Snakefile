@@ -4,6 +4,10 @@ import config
 SAMPLE = glob_wildcards("data/raw/sequences/{sample}_1.fq.gz").sample
 #print(SAMPLE)
 
+# Gene names - specify one at a time
+# options = ['ETS', 'ITS', 'matk', 'rpoB-trn-C', 'trnTtrnLtrnF']
+GENE = ETS
+
 # Treating poa reference genome as the sample
 #SAMPLE = ["poa-v1"]
 #print(SAMPLE)
@@ -20,10 +24,11 @@ POPL = ["all"]
 
 rule all:
     input:
+### Genetic diversity rule
         # Aligning reads
-#        markdups = expand(config.mark_dups, sample = SAMPLE),
+        markdups = expand(config.mark_dups, sample = SAMPLE),
         # Assess quality of mapped reads
-#        bamqc = expand("reports/bamqc/{sample}_stats/qualimapReport.html", sample = SAMPLE),
+        bamqc = expand("reports/bamqc/{sample}_stats/qualimapReport.html", sample = SAMPLE),
         # Call SNPs
 #         mpileup = "data/bcf/all.poa.raw.bcf",
 #         bcf2vcf = "data/vcf/mpileup/all.poa.raw.vcf",
@@ -40,19 +45,17 @@ rule all:
 #        calc_AB = "reports/filtering/all.poa.AB.estimate.txt",
         # Nucleotide diversity
 #        to_beagle = expand(config.beagle, chrom = CHROM),
-        sfs = expand(config.sfs, chrom = CHROM),
-        pi = expand(config.stats, chrom = CHROM),
+#        sfs = expand(config.sfs, chrom = CHROM),
+#        pi = expand(config.stats, chrom = CHROM),
         # PCA
 #        beagle = expand("data/pca/all.poa.{chrom}.beagle.gz", chrom = CHROM),
-        pca = "data/pca/all.poa.pcangsd.2dp6.cov"
+#        pca = "data/pca/all.poa.pcangsd.2dp6.cov"
 ##### Rules for aligning pacbio reads
 #        mpileup = expand("data/vcf/pacbio.{chrom}.vcf", chrom = CHROM),
 #        diag = "reports/bamqc/pacbio/qualimapReport.html",
 #         merge_vcf = "pacbio.all_scaff.vcf.gz",
 #        diag_ab = "reports/filtering/pacbio.AB.table",
 #        calc_ab = "reports/filtering/pacbio.AB.estimate.txt",
-##### Rules for identifying the APOSTART gene
-#        bwa = "data/interm/mapped_bam/apostat.mapped.bam",
 ##### Rules for identifying genes and building consensus sequences ####
        # Call vcf
 #        haplo = expand("data/vcf/trnLtrnF/{sample}.trnLtrnF.vcf", sample = SAMPLE),
@@ -68,25 +71,11 @@ rule all:
         # Multiple sequence alignment
 #        maaft = config.multi_aln
 
-        # Prepping vcf for consensus sequence
-#        vcf = expand("data/processed/filt_indels/{sample}.vcf.gz", sample = SAMPLE),
-#        txt = expand("data/processed/iupac/{sample}.txt", sample = SAMPLE),
-#        head = expand("data/processed/filt_indels/{sample}.header", sample = SAMPLE)
-
-#        dp = expand("data/processed/filtered_snps_bpres/{intervals}.filtered.dp3_77.snps.vcf", intervals = INTERVALS),
-#        dp2 = expand("data/processed/filtered_snps_bpres/{intervals}.filtered.dp3_77.nocall.snps.vcf", intervals = INTERVALS),
-#        bgzip_vcf = expand("data/processed/filtered_snps_bpres/{intervals}.filtered.dp3_77.nocall.snps.vcf.gz", intervals = INTERVALS),
-#        combine = "data/processed/filtered_snps_bpres/oryza_glum.vcf.gz",
-#        depth_diag = "reports/filtering_bpres/oryza_glum.table"
-#        wholegenome = "data/processed/filtered_snps_bpres/oglum_wholegenome.vcf.gz"
-
 # Rules
-#include: "rules/mapping.smk"
+include: "rules/mapping.smk"
 #include: "rules/process_bam.smk"
 #include: "rules/calling.smk"
 #include: "rules/consensus_seq.smk"
 #include: "rules/filtering.smk"
-#include: "rules/multiseq_align.smk"
-include: "rules/pop_gen.smk"
+#include: "rules/pop_gen.smk"
 #include: "rules/ref_AB.smk"
-#include:"rules/apostart.smk"
