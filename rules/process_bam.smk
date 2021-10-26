@@ -1,18 +1,17 @@
-# Takes the input file and stores a sorted version in a different directory.
+# (2) Sort raw bam file
 rule samtools_sort:
     input:
-#        "data/interm/mapped_bam/{sample}.mapped.bam"
         config.sort_in
     output:
         temp(config.sort_out),
     params:
         tmp = "/scratch/aphillip/sort_bam/{sample}"
-#        tmp = "/scratch/aphillip/sort_bam/pacbio"    
     run:
         shell("mkdir -p {params.tmp}")
         shell("samtools sort -T {params.tmp} {input} > {output}")
         shell("rm -rf {params.tmp}")
 
+# (3) Add read groups
 rule add_rg:
     input:
         config.sort_out
@@ -35,6 +34,8 @@ rule add_rg:
         --CREATE_INDEX=true")
         shell("rm -rf {params.tmp}")
 
+
+# (4) Mark duplicate reads
 rule mark_dups:
     input:
         config.add_rg
@@ -59,7 +60,7 @@ rule mark_dups:
         # Remove scratch directory
         shell("rm -rf {params.tmp}")
 
-# Quality metrics with qualimap
+# (5) Evaluate quality metrics with qualimap
 rule bamqc:
     input:
         config.mark_dups
