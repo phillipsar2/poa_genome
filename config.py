@@ -1,7 +1,7 @@
 ### Calling SNPs for whole genome ###
 
 # Genome
-ref = "data/genome/poa_01062021/Ppratensis.normalized.nonull.fasta"
+ref = "data/genome/poa_10262021/Poa_pratensis_v1.fasta.gz"
 #contig_list = "data/genome/poa_01062021/Ppratensis.contig.list"
 #sample_map = "data/processed/poa.sample_map"
 
@@ -11,15 +11,6 @@ ref = "data/genome/poa_01062021/Ppratensis.normalized.nonull.fasta"
 #sort_out = "data/interm/sorted_bam/{sample}.sorted.bam"
 #add_rg = "data/interm/addrg/{sample}.rg.bam"
 #mark_dups = "data/interm/mark_dups/{sample}.dedup.bam"
-
-### delete this section
-## Process the pacbio reads
-#sort_in = "data/interm/mapped_bam/pacbio.mapped.bam"
-#sort_out = "data/interm/sorted_bam/pacbio.sorted.bam"
-#add_rg = "data/interm/addrg/pacbio.rg.bam"
-#mark_dups = "data/interm/mark_dups/pacbio.dedup.bam"
-### delete this section
-
 
 # Evaluating allele balance and depth - all Poa
 #ab_table = "reports/filtering/all.poa.AB.table"
