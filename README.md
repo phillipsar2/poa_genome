@@ -1,4 +1,4 @@
-# Title when I come up with a paper name
+# A happy accident: a novel turfgrass reference genome
 
 Workflow for the phylogenetic species validation, analysis of genetic diversity, and evaluation of population strucutre of the *Poa pratensis* population panel. 
 
