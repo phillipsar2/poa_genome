@@ -1,11 +1,11 @@
 # A happy accident: a novel turfgrass reference genome
 
-Workflow for the phylogenetic species validation, analysis of genetic diversity, and evaluation of population strucutre of the *Poa pratensis* population panel. 
+Workflow for the phylogenetic species validation, analysis of genetic diversity, and evaluation of population structure of the *Poa pratensis* population panel. 
 
 Analyses are partially implemented as a Snakemake workflow 
 (https://snakemake.readthedocs.io/en/stable/index.html). 
 
-There are three groups of analyses:
+There are three groups of analyses broken into seperate rule files:
 1. Generating consenus gene sequencing for *Poa* species confirmation
 2. Population genetics of the *Poa* population panel
 3. Determining ploidy of the *P. pratensis* genome
@@ -23,8 +23,6 @@ There are three groups of analyses:
 ├── scripts   
 │   ├── allelebalance_filter.sh   
 │   └── allelebalance_filter.R   
-├── notebooks   
-│   └──    
 ├── data   
 │   ├── raw <- The original WGS data dump.   
 │   ├── interm  <- Intermediate data that has been transformed.   
@@ -39,3 +37,6 @@ There are three groups of analyses:
 ├── submit.json   
 └── submit.sh   
 </pre>
+
+## To do:
+1. add scripts for genetic diversity and plots
