@@ -1,0 +1,181 @@
+{
+    "__default__" :
+    {
+      "p" : "bigmemm",
+      "mem" : "16G",
+      "time" : "1-00:00",
+      "name": "rando",
+    },
+    "bwa_map" :
+    {
+      "mem": "32G",
+# typically 64
+      "p" : "bigmemm",
+      "time" : "2-00:00",
+      "name" : "bwa_map",
+      "cpus-per-task": 4
+    },
+    "bwa_ref" :
+    {
+      "mem": "32G",
+      "p" : "med2",
+      "time" : "7-00:00",
+      "name" : "bwa_ref",
+    },
+   "map_pacbio" :
+    {
+      "mem": "64G",
+      "p" : "med2",
+      "time" : "7-00:00",
+      "name" : "map_pacbio",
+    },
+    "samtools_sort" :
+    {
+      "p" : "bigmemm",
+      "mem" : "16G",
+# typically 32 or 48
+      "time" : "1-00:00",
+      "name " : "samtools_sort",
+    },
+    "samtools_samtobam" :
+    {
+      "p" : "med2",
+      "mem" : "16G",
+      "time" : "7-00:00",
+      "time" : "samtobam",
+    },
+
+    "bed_coverage" :
+    {
+      "p" : "med2",
+      "mem" : "4G",
+      "time" : "7-00:00"
+    },
+    "mark_dups" :
+    {
+      "p" : "bigmemm",
+      "mem" : "40G",
+      "time" : "1-00:00",
+      "name" : "mark_dups",
+    },
+    "bamqc" :
+    {
+      "p" : "bigmemm",
+      "mem" : "72G",
+      "time" : "7-00:00",
+      "name" : "bamqc",
+    },
+    "haplotype_caller" :
+    {
+      "p" : "high2",
+      "mem" : "24G",
+      "time" : "1-00:00",
+      "name" : "haplotype_caller"
+    },
+    "split_intervals" :
+    {
+      "p" : "med2",
+      "mem" : "8G",
+      "time" : "7-00:00",
+      "name" : "split_intervals"
+    },
+    "bgzip_vcfs" :
+    {
+      "p" : "med2",
+      "mem" : "4G",
+      "time" : "2-00:00",
+      "name" : "bgzip_vcfs"
+    },
+    "multi_aln" :
+    {
+      "p" : "med2",
+      "mem" : "32G",
+      "time" : "7-00:00",
+      "name" : "multi_aln"
+    },
+    "sam_mpileup" :
+    {
+      "p" : "med",
+      "mem" : "32G",
+      "time" : "14-00:00",
+      "name" : "sam_mpileup"
+    },
+    "joint_genotyping" :
+    {
+      "p" : "med2",
+      "mem" : "32G",
+      "time" : "7-00:00",
+      "name" : "jointgenotyping"
+    },
+    "get_snps" :
+    {
+      "p" : "med2",
+      "mem" : "16G",
+      "time" : "7-00:00",
+      "name" : "get_snps"
+    },
+    "hard_filter" :
+    {
+      "p" : "med2",
+      "mem" : "16G",
+      "time" : "7-00:00",
+      "name" : "filter_snps"
+    },
+    "diagnostics" :
+    {
+      "p" : "med2",
+      "mem" : "16G",
+      "time" : "7-00:00",
+      "name" : "diagnostics"
+    },
+    "filter_depth" :
+    {
+      "p" : "med2",
+      "mem" : "32G",
+      "time" : "7-00:00",
+      "name" : "filter_depth"
+    },
+    "filter_nocall" :
+    {
+      "p" : "med2",
+      "mem" : "32G",
+      "time" : "7-00:00",
+      "name" : "filter_nocall"
+    },
+    "combine_vcfs" :
+    {
+      "p" : "med2",
+      "mem" : "10G",
+      "time" : "7-00:00",
+      "name" : "combine_vcfs"
+    },
+    "calc_AB" :
+    {
+      "p" : "med2",
+      "mem" : "32G",
+      "time" : "7-00:00",
+      "name" : "calc_AB"
+    },
+    "bwa_pull" :
+    {
+      "mem": "32G",
+# typically 64
+      "p" : "med2",
+      "time" : "2-00:00",
+      "name" : "bwa_pull",
+    },
+    "angsd_saf" :
+    {
+      "mem": "16G",
+      "p" : "bigmemm",
+      "time" : "2-00:00",
+      "name" : "angsd_saf",
+    },
+ "angsd_pca" :
+    {
+      "mem": "64G",
+      "p" : "bigmemm",
+      "time" : "7-00:00",
+      "name" : "angsd_pca",
+    },
+}

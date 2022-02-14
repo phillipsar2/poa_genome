@@ -1,0 +1,60 @@
+import config
+import pandas as pd
+
+# Sample names
+SAMPLE = glob_wildcards("data/raw/sequences/{sample}_1.fq.gz").sample
+#print(SAMPLE)
+
+# Gene names - specify one at a time
+# options = ['ETS', 'ITS', 'matk', 'rpoB-trn-C', 'trnTtrnLtrnF']
+GENE = ['ETS']
+
+# Set chromosome IDs
+file = pd.read_csv(config.contig_list, header = None)
+CHROM = list(file[0])
+#print(CHROM)
+
+# Set population
+# options: boulder, crosspops
+SITE = ["boulder"]
+
+rule all:
+    input:
+### Genetic diversity rules
+        # Aligning reads
+#        markdups = expand(config.mark_dups, sample = SAMPLE),
+        # Assess quality of mapped reads
+#        bamqc = expand("reports/bamqc/{sample}_stats/qualimapReport.html", sample = SAMPLE),
+        # Nucleotide diversity
+#        sfs = expand(config.sfs, chrom = CHROM),
+#        pi = expand(config.stats, chrom = CHROM),
+#        merge = expand("data/angsd_pi/{site}/{site}.1dp4.thetas.idx.pestPG", site = SITE)
+        #Fst
+        saf = config.saf_pop
+        # PCA
+#        beagle = expand("data/pca/all.poa.{chrom}.1dp4.beagle.gz", chrom = CHROM),
+#        pca = "data/pca/all.poa.pcangsd.1dp4.cov"
+### Rules for calculating AB in the reference genome
+#        mpileup = expand("data/vcf/pacbio.{chrom}.vcf", chrom = CHROM),
+#        diag = "reports/bamqc/pacbio/qualimapReport.html",
+#         merge_vcf = "pacbio.all_scaff.vcf.gz",
+#        diag_ab = "reports/filtering/pacbio.AB.table",
+#        calc_ab = "reports/filtering/pacbio.AB.estimate.txt",
+### Rules for generating consensus marker sequences
+       # Align to gene reference
+#        map = expand(sort_in, sample = SAMPLE, gene = GENE)
+       # Call SNPs
+#        haplo = expand("data/vcf/{gene}/{sample}.{gene}.snps.vcf", sample = SAMPLE,  gene = GENE),
+       # Filter snps
+#        hard_filt = expand("data/processed/filtered_snps/{gene}/{sample}.{gene}.filtered.nocall.snps.vcf", sample = SAMPLE, gene = GENE)
+        # Call consensus seq
+#        consensus = expand("data/gene/{gene}/{sample}.consensus.{gene}.fasta", sample = SAMPLE, gene = GENE)
+
+# Rules
+#include: "rules/mapping.smk"
+#include: "rules/process_bam.smk"
+#include: "rules/calling.smk"
+#include: "rules/consensus_seq.smk"
+#include: "rules/filtering.smk"
+include: "rules/pop_gen.smk"
+#include: "rules/ref_AB.smk"
