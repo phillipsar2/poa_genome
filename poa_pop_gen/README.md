@@ -18,7 +18,9 @@ There are three groups of analyses broken into seperate rule files:
 ├── environment.yml   
 ├── scripts   
 │   ├── allelebalance_filter.sh   
-│   └── allelebalance_filter.R   
+│   ├── allelebalance_filter.R   
+│   ├── process_trees.R <- Script for tree figures.   
+│   └── poa_pca_pi.R <- Script for PCA and pi figures.    
 ├── data   
 │   ├── raw <- The original WGS data dump.   
 │   ├── interm  <- Intermediate data that has been transformed.   

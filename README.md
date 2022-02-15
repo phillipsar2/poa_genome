@@ -1,5 +1,7 @@
 # A happy accident: a novel turfgrass reference genome
 
+Preprint: 
+
 This repo is split into two subdirectories:
 
 1. poa_pop_gen: Workflow for the phylogenetic species validation, analysis of genetic diversity, and evaluation of population structure of the Poa pratensis population panel.
