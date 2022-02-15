@@ -4,11 +4,9 @@ Analyses are partially implemented as a Snakemake workflow
 (https://snakemake.readthedocs.io/en/stable/index.html). 
 
 There are three groups of analyses broken into seperate rule files:
-1. Generating consenus gene sequencing for *Poa* species confirmation
-2. Population genetics of the *Poa* population panel
-3. Determining ploidy of the *P. pratensis* genome
-
-## Workflow
+1. Generating consenus gene sequencing for *Poa* species confirmation (rules/consensus_seq.smk)
+2. Population genetics of the *Poa* population panel (rules/pop_gen.smk)
+3. Determining ploidy of the *P. pratensis* genome (rules/ref_AB.smk & scripts/predict_chromcount.R)
 
 ## Project Organization
 <pre>
@@ -31,10 +29,7 @@ There are three groups of analyses broken into seperate rule files:
 ├── reports <- Generated analyses as HTML, PDF, or .txt.    
 ├── Snakefile   
 ├── config.py   
-├── results   
 ├── submit.json   
 └── submit.sh   
 </pre>
 
-## To do:
-1. add scripts for genetic diversity and plots
