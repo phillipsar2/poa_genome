@@ -1,0 +1,5 @@
+poa_pop_gen/rules/apostart.smk
+poa_pop_gen/rules/calling.smk 
+poa_pop_gen/rules/filtering.smk
+poa_pop_gen/rules/process_bam.smk
+poa_pop_gen/rules/mapping.smk
