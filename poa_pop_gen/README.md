@@ -1,5 +1,3 @@
-# A happy accident: a novel turfgrass reference genome
-
 Workflow for the phylogenetic species validation, analysis of genetic diversity, and evaluation of population structure of the *Poa pratensis* population panel. 
 
 Analyses are partially implemented as a Snakemake workflow 
@@ -26,9 +24,9 @@ There are three groups of analyses broken into seperate rule files:
 ├── data   
 │   ├── raw <- The original WGS data dump.   
 │   ├── interm  <- Intermediate data that has been transformed.   
-│   ├── processed <- The final datasets for modeling.   
+│   ├── processed <- The final datasets.
 │   ├── vcf <- The unfiltered vcfs.   
-│   ├── gene <- Genes downloaded from NCBI.    
+│   ├── gene <- Genes downloaded from NCBI for phylogenetic analyses.    
 │   └── genome <- The reference genome.   
 ├── reports <- Generated analyses as HTML, PDF, or .txt.    
 ├── Snakefile   
