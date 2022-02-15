@@ -51,10 +51,6 @@ rule all:
 #        consensus = expand("data/gene/{gene}/{sample}.consensus.{gene}.fasta", sample = SAMPLE, gene = GENE)
 
 # Rules
-#include: "rules/mapping.smk"
-#include: "rules/process_bam.smk"
-#include: "rules/calling.smk"
 #include: "rules/consensus_seq.smk"
-#include: "rules/filtering.smk"
 include: "rules/pop_gen.smk"
 #include: "rules/ref_AB.smk"
