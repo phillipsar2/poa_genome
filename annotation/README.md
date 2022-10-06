@@ -1,6 +1,9 @@
 test
 # Annotation
 
+
+## Datasets
+
 Raw RNAseq data was downloaded from NCBI, searching for the _Poa pratensis_, using the search term:`(((Poa pratensis[Organism]) AND "transcriptomic"[Source]) AND "illumina"[Platform]) AND "paired"[Layout]`. A total of 58 libraries, belonging to 7 different `BioProject`s were used as evidence set for gene prediction.
 
 | Run         | AvgSpotLen | Bases      | BioProject  | BioSample    | Center Name                                                   | Consent | Experiment | geo_loc_name_country | Instrument          | LibraryLayout | LibrarySelection   | LibrarySource  | Organism      | dev_stage         | Cultivar   | Ecotype              | Treatment                           |
@@ -63,3 +66,74 @@ Raw RNAseq data was downloaded from NCBI, searching for the _Poa pratensis_, usi
 | SRR8509625  | 300        | 6849522000 | PRJNA517968 | SAMN10849435 | NORTHEAST AGRICULTURAL UNIVERSITY                             | public  | SRX5313279 | China                | HiSeq X Ten         | PAIRED        | size fractionation | TRANSCRIPTOMIC | Poa pratensis |                   | Midnight   |                      | Treatment with PEG6000 for 0 hours  |
 | SRR8509626  | 300        | 6523731000 | PRJNA517968 | SAMN10849436 | NORTHEAST AGRICULTURAL UNIVERSITY                             | public  | SRX5313278 | China                | HiSeq X Ten         | PAIRED        | size fractionation | TRANSCRIPTOMIC | Poa pratensis |                   | Midnight   |                      | Treatment with PEG6000 for 0 hours  |
 | SRR8509627  | 300        | 6757179600 | PRJNA517968 | SAMN10849443 | NORTHEAST AGRICULTURAL UNIVERSITY                             | public  | SRX5313277 | China                | HiSeq X Ten         | PAIRED        | size fractionation | TRANSCRIPTOMIC | Poa pratensis |                   | Midnight   |                      | Treatment with PEG6000 for 16 hours |
+
+
+Data was downloaded from ENA using the `enaBrowserTools` with the command `enaDataGet`
+
+```bash
+while read line; do
+  python3 enaBrowserTools-1.6/python3/enaDataGet.py -f fastq -as  ~/.aspera_setting.ini $line;
+done<assets/sra.ids
+```
+
+quick inspection was done to ensure the data quality was satisfactory
+
+```bash
+mkdir Poa-pratensis
+cd Poa-pratensis
+mv SRR*/*.fq.gz ./Poa-pratensis
+for fq in *.fq.gz; do
+  fastqc --threads 36 $fq
+done
+```
+
+
+## Scripts used for annotation:
+
+
+
+1. The `step_1_make-star-slurm.sh` was used to generate slurm script for mapping reads using STAR mapping program. The script was submitted using `sbatch Poa-pratensis_0.sub`. Once the run was complete, the directory was organized using `step_1_clean-dir.sh`. It was run within the `Poa-pratensis` folder, to move the STAR Db, misc files, bam files and slurm job files to respective directory. Mapping stats were collated using `multiqc`
+
+![mapping_stats](assets/star_alignment_plot.png)
+
+2. Genome summary stats, including BUSCO runs, separate primary and alternative haplotypes from the genome `fasta` files based on the scaffold names was carried out using `step_2_genome-summary-stats-full.sh` script.
+
+3. The `step_3_prepare-star-primary.sh` was used to generate slurm script for mapping reads using STAR mapping program (for only primary scaffolds). Once the run was complete, the directory was organized using `step_3_clean-star-run.sh`. It was run within the `Poa-pratensis` folder, to move the STAR Db, misc files, bam files and slurm job files to respective directory. Mapping stats were collated using `multiqc`
+
+![mapping_stats](assets/star_alignment_plot-post.png)
+
+4a. The merged BAM file generated in the previous step was then used for genome guided transcript assembly. The `step_4_make-transcript-assemblies.sh` was used to run various assemblers and BRAKER. It was launched as
+
+```bash
+step_4_make-transcript-assemblies.sh Poa-pratensis
+```
+
+4b. Once the Trinity run was complete, the `step_4_gmap-trinity-transcripts.sh` was used to map the Trinity genome guided transcriptomes back to the genome assembly.
+
+```bash
+step_4_gmap-trinity-transcripts.sh Poa-pratensis
+```
+
+4c. The assembled transcriptomes were then finalized using `step_4_make-mikado-container.sh` that runs the mikado pipeline to pick the best transcript for each locus.
+
+```bash
+step_4_make-mikado-container.sh Poa-pratensis
+```
+
+5. The BRAKER predictions, mikado transcripts and homology predictions (rice) were them combined using the `step_4_run-gemoma.sh` script.
+
+```bash
+step_4_run-gemoma.sh Poa-pratensis
+```
+
+6. The annotations were then finalized using `step_6_finalize-gff.sh` scripts - which renames the gene/mRNA ids, adds the exon features, creates CDS and peptide fasta files for subsequent analyses. It also calculates detailed annotation statistics.
+
+```bash
+step_6_finalize-gff.sh Poa-pratensis
+```
+
+7. Repeat annotations were carried out using the `step_7_run-edata-on-genome.sh` script, that uses the CDS fasta file generated in the previous step to mask the coding sequences from the genome, and use EDTA for annotating repeats.
+
+```bash
+step_7_run-edata-on-genome.sh Poa-pratensis
+```
