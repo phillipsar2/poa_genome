@@ -1,6 +1,7 @@
 test
 # Annotation
 
+All scripts used in the section below are in `assets` folder.
 
 ## Datasets
 
