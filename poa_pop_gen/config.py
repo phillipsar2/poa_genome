@@ -3,6 +3,7 @@
 # Genome ----
 ref = "data/genome/poa_10262021/Poa_pratensis_v1.hap1.fasta"
 contig_list = "data/genome/poa_10262021/hap1.contig.list"
+fai = "data/genome/poa_10262021/Poa_pratensis_v1.hap1.fasta.fai"
 #sample_map = "data/processed/poa.sample_map"
 
 # Process bams ----

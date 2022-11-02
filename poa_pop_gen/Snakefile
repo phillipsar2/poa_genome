@@ -30,10 +30,11 @@ rule all:
 #        pi = expand(config.stats, chrom = CHROM),
 #        merge = expand("data/angsd_pi/{site}/{site}.1dp4.thetas.idx.pestPG", site = SITE)
         #Fst
-        saf = config.saf_pop
+#        saf = config.saf_pop
         # PCA
 #        beagle = expand("data/pca/all.poa.{chrom}.1dp4.beagle.gz", chrom = CHROM),
 #        pca = "data/pca/all.poa.pcangsd.1dp4.cov"
+        pca_single = "data/pca/all.poa.1dp4.covMat",
 ### Rules for calculating AB in the reference genome
 #        mpileup = expand("data/vcf/pacbio.{chrom}.vcf", chrom = CHROM),
 #        diag = "reports/bamqc/pacbio/qualimapReport.html",

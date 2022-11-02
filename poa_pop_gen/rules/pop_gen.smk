@@ -179,6 +179,31 @@ rule merge_thetas:
         """
     
 
+# (1b) Randomly grab a single read at all sites
+rule pi_single:
+    input:
+        ref = config.ref,
+        bamlist = "data/interm/mark_dups/pratensis_bamlist.txt",
+    output:
+        "data/angsd_pi/pratensis.1dp4.maf05.MQ20.ibs.gz"
+    params:
+        prefix = "data/angsd_pi/pratensis.1dp4.maf05.MQ20"
+    run:
+        shell("angsd \
+        -GL 1 -P 15 \
+        -doMajorMinor 4 \
+        -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 \
+        -minMapQ 20 -minQ 20 \
+        -setMinDepthInd 1 -setMaxDepthInd 4 \
+        -minInd 7 \
+        -bam {input.bamlist} \
+        -doCounts 1 \
+        -doMaf 1 \
+        -minMaf 0.05 \
+        -ref {input.ref} \
+        -doIBS 1 \
+        -out {params.prefix}")
+
 
 ### PCA --------
 
@@ -212,7 +237,7 @@ rule angsd_beagle:
 #        shell("cat <(zcat data/pca/*beagle.gz | head -n1) <(zcat data/pca/*beagle.gz | \
 #        grep -v marker) > data/pca/all.poa.merged.2dp6.be
 
-# (3) run PCA
+# (3a) run PCA
 
 rule angsd_pca:
     input:
@@ -221,61 +246,37 @@ rule angsd_pca:
         pca = "data/pca/all.poa.pcangsd.1dp4.cov"
     run:
         shell("gzip data/pca/all.poa.merged.1dp4.beagle")        
-        shell("python tools/pcangsd/pcangsd.py -beagle data/pca/all.poa.merged.1dp4.beagle.gz -o data/pca/all.poa.pcangsd.1dp4")
+        shell("python tools/pcangsd/pcangsd.py -beagle data/pca/all.poa.merged.1dp4.beagle.gz -sites_save -o data/pca/all.poa.pcangsd.1dp4")
 
 
-
-### Fst for P. pratensis --------
-
-# (1) Calculate SAF for each P. pratensis population
-
-rule saf_per_pop:
+# (3b) run PCA with single read sampling approach
+# -doIBS 1 prints a randomly sampled read from each individual at each position
+# -doCov 1 prints out the covariance matrix which can be used for a PCA
+# -minMaf 0.05 excludes sites with a minor allele freq less the 0.05
+# -doMajorMinor 4 specifies the Major allele to be the reference allele specified by -ref
+rule PCA_single:
     input:
         ref = config.ref,
-        bamlist = config.bamlist_pop
+        bamlist = "data/interm/mark_dups/all_poa_bamlist.txt",
     output:
-        config.saf_pop
+#        "data/pca/all.poa.1dp4.1e3.covMat"
+        "data/pca/all.poa.1dp4.maf05.ibs.gz"
     params:
-        ind = {config.ind_pop},
-        prefix = config.prefix_pop,
-#        chrom = "{chrom}"
+        prefix = "data/pca/all.poa.1dp4.maf05"
     run:
-        shell("angsd -GL 1 -P 15 \
+        shell("angsd \
+        -GL 1 -P 15 \
+        -doMajorMinor 4 \
         -uniqueOnly 1 -remove_bads 1 -only_proper_pairs 1 -trim 0 -C 50 \
         -minMapQ 30 -minQ 30 \
-        -doCounts 1 \
         -setMinDepthInd 1 -setMaxDepthInd 4 \
-        -minInd {params.ind} \
-        -ref {input.ref} -anc {input.ref} \
-        -doSaf 1 \
+        -minInd 8 \
         -bam {input.bamlist} \
+        -doCounts 1 \
+        -doMaf 1 \
+        -minMaf 0.05 \
+        -ref {input.ref} \
+        -doIBS 1 \
         -out {params.prefix}")
-
-
-# (2) Calculate SFS for each population pair and Fst
-# do not need to specify region as each saf is a region
-# realSFS generates the maximum likelihood estimate of the SFS
-# -fold 1 specifies the folded spectrum as I don't have an ancestral state
-### when using a folded SFS, only thetaW, thetaD, and tajimasD will be meaningful in the output of realSFS
-
-# pick tolstoi or argyle to compare to boulder
-rule sfs_2pops:
-    input:
-        "data/saf/boulder/pratensis.boulder.1dp4.saf.idx"
-    output:
-        sfs = "data/sfs/boulder.tolstoi.ml"
-    run:
-        shell("realSFS data/saf/boulder/pratensis.boulder.1dp4.saf.idx data/saf/tolstoi/pratensis.tolstoi.1dp4.saf.idx \
-        -P 10 -fold 1 > {output}")
-
-
-# Calculate global estimate of Fst
-rule fst:
-    input:
-        "data/sfs/boulder.tolstoi.ml"
-    output:
-         "data/fst/boulder.tolstoi.fst.idx"
-    run:
-        shell("realSFS fst index data/saf/boulder/pratensis.boulder.1dp4.saf.idx data/saf/tolstoi/pratensis.tolstoi.1dp4.saf.idx \
-        -sfs {input} -fstout data/fst/boulder.tolstoi")
-        shell("real SFS stats data/fst/boulder.tolstoi.fst.idx -> data/fst/boulder.tolsoi.fst.global")
+ #       -SNP_pval 1e-3 \
+ #       -doCov 1 \
