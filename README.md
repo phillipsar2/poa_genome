@@ -1,16 +1,15 @@
 # A happy accident: a novel turfgrass reference genome
 
-Preprint: 
+Preprint: [*Phillips, A.R., *Seetharam, A.S., AuBuchon-Elder, T., Buckler, E.S., Gillespie, L.J., Hufford, M.B., Llaca, V., Romay, M.C., Soreng, R.J., Kellogg, E.A. and Ross-Ibarra, J.R.. A happy accident: A novel turfgrass reference genome. bioRxiv 2022](https://www.biorxiv.org/content/10.1101/2022.03.08.483531v1)
 
 ## Project organization
 
-This repo is split into two subdirectories:
+Analyses are organizing into three subdirectories:
 
 1. poa_pop_gen: Workflow for the phylogenetic species validation, analysis of genetic diversity, and evaluation of population structure of the Poa pratensis population panel.
-2. X: genome assembly, annotation, and quality assessment.
+2. assembly: Workflow for genome assembly and assessment of assembly.
+3. annotation: Workflow for the gene and repetitive element annotations and assesment of annotation quality..
 
 ## Data availability
-The raw Illumina sequence data for the Poa population panel is available from NCBI Sequence Read Archive (SRA) under Bio-Project ID PRJNA730042.
-
-The reference genome and annotation are available at X. 
-
+The genome assembly and annotation are available from the European Nucleotide Archive (ENA) under BioProject PRJEB51672. 
+The raw Illumina sequence data for the Poa population panel is available from NCBI Sequence Read Archive (SRA) under BioProject ID PRJNA730042. 
