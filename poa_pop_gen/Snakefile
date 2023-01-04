@@ -18,6 +18,9 @@ CHROM = list(file[0])
 # options: boulder, crosspops
 SITE = ["boulder"]
 
+# Set run
+RUN = ["r1","r2","r3"]
+
 rule all:
     input:
 ### Genetic diversity rules
@@ -25,22 +28,13 @@ rule all:
 #        markdups = expand(config.mark_dups, sample = SAMPLE),
         # Assess quality of mapped reads
 #        bamqc = expand("reports/bamqc/{sample}_stats/qualimapReport.html", sample = SAMPLE),
-        # Nucleotide diversity
-#        sfs = expand(config.sfs, chrom = CHROM),
-#        pi = expand(config.stats, chrom = CHROM),
-#        merge = expand("data/angsd_pi/{site}/{site}.1dp4.thetas.idx.pestPG", site = SITE)
-        #Fst
-#        saf = config.saf_pop
         # PCA
 #        beagle = expand("data/pca/all.poa.{chrom}.1dp4.beagle.gz", chrom = CHROM),
 #        pca = "data/pca/all.poa.pcangsd.1dp4.cov"
-        pca_single = "data/pca/all.poa.1dp4.covMat",
-### Rules for calculating AB in the reference genome
-#        mpileup = expand("data/vcf/pacbio.{chrom}.vcf", chrom = CHROM),
-#        diag = "reports/bamqc/pacbio/qualimapReport.html",
-#         merge_vcf = "pacbio.all_scaff.vcf.gz",
-#        diag_ab = "reports/filtering/pacbio.AB.table",
-#        calc_ab = "reports/filtering/pacbio.AB.estimate.txt",
+#        pca_single = "data/pca/all.poa.1dp4.1e3.covMat",
+        pca_single = "data/pca/pratensis.1dp4.maf05.ibs.gz",
+        # Nucleotide diversity
+        pi_single = expand("data/angsd_pi/pratensis.1dp4.MQ20.{run}.ibs.gz", run = RUN)
 ### Rules for generating consensus marker sequences
        # Align to gene reference
 #        map = expand(sort_in, sample = SAMPLE, gene = GENE)

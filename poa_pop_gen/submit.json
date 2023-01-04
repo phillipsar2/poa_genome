@@ -171,14 +171,14 @@
       "time" : "2-00:00",
       "name" : "angsd_saf",
     },
- "angsd_pca" :
+    "angsd_pca" :
     {
       "mem": "64G",
       "p" : "bigmemm",
       "time" : "7-00:00",
       "name" : "angsd_pca",
     },
-  "pca_single" :
+    "pca_single" :
     {
       "mem": "64G",
       "p" : "high2",
