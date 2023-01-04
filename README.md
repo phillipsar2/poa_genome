@@ -11,5 +11,5 @@ Analyses are organizing into three subdirectories:
 3. annotation: Workflow for the gene and repetitive element annotations and assesment of annotation quality..
 
 ## Data availability
-The genome assembly and annotation are available from the European Nucleotide Archive (ENA) under BioProject PRJEB51672. 
-The raw Illumina sequence data for the Poa population panel is available from NCBI Sequence Read Archive (SRA) under BioProject ID PRJNA730042. 
+The genome assembly and annotation are available from the European Nucleotide Archive (ENA) under BioProject [PRJEB51672](https://www.ebi.ac.uk/ena/browser/view/PRJEB51672). 
+The raw Illumina sequence data for the Poa population panel is available from NCBI Sequence Read Archive (SRA) under BioProject ID [PRJNA730042](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA730042/).
