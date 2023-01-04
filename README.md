@@ -6,8 +6,8 @@ Preprint: [*Phillips, A.R., *A.S. Seetharam, T. AuBuchon-Elder, E.S. Buckler, L.
 
 Analyses are organizing into three subdirectories:
 
-1. `assembly`: Workflow for genome assembly and assessment of assembly.
-2. `annotation`: Workflow for the gene and repetitive element annotations and assesment of annotation quality.
+1. `annotation`: Workflow for the gene and repetitive element annotations and assesment of annotation quality.
+2. `assembly`: Workflow for genome assembly and assessment of assembly.
 3. `poa_pop_gen`: Workflow for the phylogenetic species validation, analysis of genetic diversity, and evaluation of population structure of the Poa pratensis population panel.
 
 ## Data availability
