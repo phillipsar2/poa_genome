@@ -1,6 +1,6 @@
 # A happy accident: a novel turfgrass reference genome
 
-Preprint: [*Phillips, A.R., *A.S. Seetharam, T. AuBuchon-Elder, E.S. Buckler, L.J. Gillespie, M.B. Hufford, V. Llaca, M.C. Romay, R.J. Soreng, E.A Kellogg, and J. Ross-Ibarra. A happy accident: A novel turfgrass reference genome. bioRxiv 2022](https://www.biorxiv.org/content/10.1101/2022.03.08.483531v1)
+Preprint: [*Phillips, A.R., *A.S. Seetharam, P.S. Albert, T. AuBuchon-Elder, J.A. Birchler, E.S. Buckler, L.J. Gillespie, M.B. Hufford, V. Llaca, M.C. Romay, R.J. Soreng, E.A Kellogg, and J. Ross-Ibarra. A happy accident: A novel turfgrass reference genome. bioRxiv 2022](https://www.biorxiv.org/content/10.1101/2022.03.08.483531v1)
 
 ## Project organization
 
