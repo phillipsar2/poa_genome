@@ -2,6 +2,8 @@
 
 Preprint: [*Phillips, A.R., *A.S. Seetharam, P.S. Albert, T. AuBuchon-Elder, J.A. Birchler, E.S. Buckler, L.J. Gillespie, M.B. Hufford, V. Llaca, M.C. Romay, R.J. Soreng, E.A Kellogg, and J. Ross-Ibarra. A happy accident: A novel turfgrass reference genome. bioRxiv 2022](https://www.biorxiv.org/content/10.1101/2022.03.08.483531v1)
 
+Publication: [*Phillips, A.R., *A.S. Seetharam, P.S. Albert, T. AuBuchon-Elder, J.A. Birchler, E.S. Buckler, L.J. Gillespie, M.B. Hufford, V. Llaca, M.C. Romay, R.J. Soreng, E.A Kellogg, and J. Ross-Ibarra. A happy accident: A novel turfgrass reference genome. G3 2023](https://academic.oup.com/g3journal/advance-article/doi/10.1093/g3journal/jkad073/7099442?utm_source=advanceaccess&utm_campaign=g3journal&utm_medium=email)
+
 ## Project organization
 
 Analyses are organizing into three subdirectories:
